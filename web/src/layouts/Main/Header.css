@@ -1,0 +1,111 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  color: #eeeeee;
+  background-color: rgb(15, 15, 15);
+  font-size: 22px;
+}
+
+header .Logo {
+  height: 80px;
+  min-width: 248px;
+  padding: 0 25px;
+  line-height: 80px;
+}
+
+header .Logo>a {
+  background: -webkit-linear-gradient(135deg,
+      var(--primary-account-color),
+      var(--secondary-account-color));
+  background-clip: unset;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+header .Account {
+  height: 80px;
+  min-width: 248px;
+  padding: 0 25px;
+  line-height: 80px;
+  cursor: pointer;
+}
+
+header .Account.connected {
+  cursor: default;
+}
+
+header .Account:hover {
+  color: #aaaaaa;
+}
+
+header .Account .Address {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0;
+}
+
+header .Account .Address .Avatar {
+  display: flex;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  border-radius: 24px;
+  background: linear-gradient(135deg,
+      var(--primary-account-color),
+      var(--secondary-account-color));
+  margin-left: 10px;
+}
+
+header nav {
+  position: absolute;
+  top: 80px;
+  background-color: rgb(15, 15, 15);
+  min-width: 248px;
+  padding: 10px 25px 25px;
+  margin: 0 -25px;
+  line-height: normal;
+  z-index: 99;
+}
+
+header nav a {
+  display: block;
+  margin: 5px 0;
+}
+
+header .Logo #mainMenu {
+  display: none;
+}
+
+header .Logo:hover #mainMenu {
+  display: block;
+  animation: growDown 300ms ease-in-out;
+  transform-origin: top center;
+}
+
+header .Account #accountMenu {
+  display: none;
+}
+
+header .Account:hover #accountMenu {
+  display: block;
+  animation: growDown 300ms ease-in-out;
+  transform-origin: top center;
+}
+
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+
+  50% {
+    transform: scaleY(0.5);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}

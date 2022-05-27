@@ -1,22 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import Layout from './layouts/Main/Main'
+import Router from './components/App/Router'
+
+import MetaMaskProvider from "./components/App/Auth/MetaMask"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <MetaMaskProvider>
+      <Layout>
+        <Router />
+      </Layout>
+    </MetaMaskProvider>
+  )
 }
 
-export default App;
+export default App

@@ -1,0 +1,62 @@
+:root {
+  --primary-account-color: #111111;
+  --secondary-account-color: #aaaaaa;
+}
+
+body {
+  background-color: black;
+  color: white;
+}
+
+a {
+  color: #eeeeee;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #aaaaaa;
+}
+
+.App {
+  display: grid;
+  grid-template-rows: 80px calc(100vh - 140px) 60px;
+  max-height: 100vh;
+  min-width: 1000px;
+  max-width: 80vw;
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.Overlay {
+  position: absolute;
+  width: 1000px;
+  height: calc(100vh - 140px);
+  background: rgba(0, 0, 0, 0.95);
+  top: 80px;
+  padding: -5px;
+  margin: 0 auto;
+  font-size: 50px;
+  text-align: center;
+}
+
+.App>main {
+  position: relative;
+  background-color: rgb(25, 25, 25);
+  padding: 5px;
+  overflow-y: scroll;
+}
+
+.App>main::-webkit-scrollbar {
+  width: 10px;
+}
+
+.App>main::-webkit-scrollbar-track {
+  background-color: #111111;
+  border-radius: 100px;
+}
+
+.App>main::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 100px;
+  background-color: #aaaaaa;
+}

@@ -1,14 +1,17 @@
+import MetaMaskProvider from "./components/App/Auth/MetaMask"
+import AuthProvider from "./components/App/Auth/Auth"
+
 import Layout from './layouts/Main/Main'
 import Router from './components/App/Router'
-
-import MetaMaskProvider from "./components/App/Auth/MetaMask"
 
 function App() {
   return (
     <MetaMaskProvider>
-      <Layout>
-        <Router />
-      </Layout>
+      <AuthProvider>
+        <Layout>
+          <Router />
+        </Layout>
+      </AuthProvider >
     </MetaMaskProvider>
   )
 }

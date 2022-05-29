@@ -7,6 +7,6 @@ const router = new Router()
 
 router.get('/', list)
 
-router.post('/:slug/:version/copy/:address', AuthMiddleware, copy)
+router.post('/:template/:version/copy/:address', AuthMiddleware, copy)
 
 export default router

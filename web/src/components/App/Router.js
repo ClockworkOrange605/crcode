@@ -5,15 +5,36 @@ import { Routes, Route } from "react-router-dom"
 import { useMetaMask } from "../../components/App/Auth/MetaMask"
 import { useAuth } from "../../components/App/Auth/Auth"
 
+import Templates from "../Account/Artworks/Create"
+
 const Router = () => {
   return (
     <Routes>
       <Route
         path="/account"
-        element={<RequireAuth>test</RequireAuth>}
+        element={<RequireAuth>Under the Development</RequireAuth>}
       />
 
-      <Route path="*"
+      <Route
+        path="/account/artworks"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+      <Route
+        path="/account/artworks/create"
+        element={<RequireAuth><Templates /></RequireAuth>}
+      />
+      <Route
+        path="/account/artworks/:id/editor"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+
+      <Route
+        path="/account/collection"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+
+      <Route
+        path="*"
         element={<p>Not Found - 404 Page</p>}
       />
     </Routes>

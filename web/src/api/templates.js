@@ -6,7 +6,7 @@ const list = async () => {
 const copy = async (account, slug, version) => {
   const token = sessionStorage.getItem(account)
 
-  const response = await fetch(`/templates/${slug}/${version}/copy/${account}`,
+  const response = await fetch(`/templates/${slug}/${version}/copy/`,
     {
       method: 'POST',
       headers: {

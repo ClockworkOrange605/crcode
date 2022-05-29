@@ -72,6 +72,7 @@ const RequireAuth = ({ children }) => {
     }
 
     authorize()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethereum, address, account])
 
   return account ? children : <p></p>

@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, Fragment } from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
-// import { Console, Hook, Decode } from 'console-feed'
+import { Console, Hook, Decode } from 'console-feed'
 
 import { useAuth } from '../../../components/App/Auth/Auth'
 
@@ -19,7 +19,7 @@ function IDE() {
   // const navigate = useNavigate()
 
   const iframeRef = useRef()
-  // const consoleRef = useRef()
+  const consoleRef = useRef()
 
   const { id } = useParams()
   const { account } = useAuth()
@@ -28,7 +28,7 @@ function IDE() {
   const [template, setTemplate] = useState()
   const [files, setFiles] = useState([])
 
-  // const [logs, setLogs] = useState([])
+  const [logs, setLogs] = useState([])
 
   const [loading, setLoading] = useState(false)
   // const [saveMethod, setSaveMethod] = useState()
@@ -37,11 +37,6 @@ function IDE() {
     if (account && id)
       load(id, account)
   }, [account, id])
-
-  //TODO: temporary
-  useEffect(() => {
-    template && reload()
-  }, [template])
 
   const load = async (id, account) => {
     const artwork = await getArtwork(id, account)
@@ -54,20 +49,26 @@ function IDE() {
   }
 
   function reload() {
-    iframeRef.current.src = `http://localhost:9005/preview/${id}/sources/${template?.sources?.index}`
-    // setLogs([])
+    // const host = 'http://localhost:9005'
+    const host = ''
+    iframeRef.current.src = `${host}/preview/${id}/sources/${template?.sources?.index}`
+    setLogs([])
   }
 
-  // function stop() {
-  //   iframeRef.current.src = ''
-  //   setLogs([])
-  // }
+  function stop() {
+    iframeRef.current.src = ''
+    setLogs([])
+  }
 
-  // function captureLogs() {
-  //   Hook(iframeRef.current.contentWindow.console,
-  //     log => setLogs(logs => [...logs, Decode(log)])
-  //   )
-  // }
+  useEffect(() => {
+    consoleRef.current.scrollTop = consoleRef.current.scrollHeight
+  }, [logs])
+
+  function captureLogs() {
+    Hook(iframeRef.current.contentWindow.console,
+      log => setLogs(logs => [...logs, Decode(log)])
+    )
+  }
 
   // function generateMedia() {
   //   setLoading(true)
@@ -81,11 +82,6 @@ function IDE() {
   //     setLoading(false)
   //   })
   // }
-
-  // AutoScroll Console div
-  // useEffect(() => {
-  //   consoleRef.current.scrollTop = consoleRef.current.scrollHeight
-  // }, [logs])
 
   return (
     <div className="IDE">
@@ -113,9 +109,10 @@ function IDE() {
 
       {!loading && (
         <div className="Preview">
-          {/* <div className="Controls">
+          <div className="Controls">
             <div style={{ float: "left" }}>
-              <button onClick={() => saveMethod()}>▶ Run</button>
+              {/* <button onClick={() => saveMethod()}>▶ Run</button> */}
+              <button onClick={() => reload()}>▶ Run</button>
               <button onClick={() => stop()}>◼ Stop</button>
             </div>
 
@@ -123,21 +120,22 @@ function IDE() {
               <input id="AutoReload" type="checkbox" disabled></input>
               Auto Reload
             </label>
-          </div> */}
+          </div>
 
           <iframe
             title="Preview"
             className="Window"
             ref={iframeRef}
-          // onLoad={captureLogs}
+            // TODO: try to capture logs earlier
+            onLoad={captureLogs}
           />
 
-          {/* <div className="Console" ref={consoleRef}>
+          <div className="Console" ref={consoleRef}>
             <Console
               variant="dark"
               logs={logs}
             />
-          </div> */}
+          </div>
         </div>
       )}
 

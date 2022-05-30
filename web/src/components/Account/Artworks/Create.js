@@ -34,7 +34,7 @@ const CreatePage = () => {
 const Templates = ({ submit }) => {
   const [templates, setTemplates] = useState()
 
-  useEffect(() => load, [])
+  useEffect(() => { load() }, [])
 
   const load = async () => {
     const templatesList = await list()

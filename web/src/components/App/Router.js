@@ -28,6 +28,14 @@ const Router = () => {
         path="/account/artworks/:id/editor"
         element={<RequireAuth><IDE /></RequireAuth>}
       />
+      <Route
+        path="/account/artworks/:id/metadata"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+      <Route
+        path="/account/artworks/:id/publish"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
 
       <Route
         path="/account/collection"

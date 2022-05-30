@@ -4,19 +4,18 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Console, Hook, Decode } from 'console-feed'
 
 import { useAuth } from '../../../components/App/Auth/Auth'
+import Loader from '../../../components/App/Loader/Loader'
 
-import { get as getArtwork } from '../../../api/artworks'
+import { get as getArtwork, generate as generateArtwork } from '../../../api/artworks'
 import { get as getTemplate } from '../../../api/templates'
 import { getFiles } from '../../../api/editor'
-
-// import Loader from '../Common/Loader'
 
 import * as monaco from 'monaco-editor'
 
 import './Editor.css'
 
 function IDE() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const iframeRef = useRef()
   const consoleRef = useRef()
@@ -24,14 +23,13 @@ function IDE() {
   const { id } = useParams()
   const { account } = useAuth()
 
+  const [loadingMessage, setLoading] = useState(null)
+
   const [artwork, setArtwork] = useState({})
   const [template, setTemplate] = useState()
   const [files, setFiles] = useState([])
 
   const [logs, setLogs] = useState([])
-
-  const [loading, setLoading] = useState(false)
-  // const [saveMethod, setSaveMethod] = useState()
 
   useEffect(() => {
     if (account && id)
@@ -39,6 +37,8 @@ function IDE() {
   }, [account, id])
 
   const load = async (id, account) => {
+    setLoading('Initializing Editor')
+
     const artwork = await getArtwork(id, account)
     const template = await getTemplate(artwork.template)
     const { files } = await getFiles(id, account)
@@ -46,11 +46,13 @@ function IDE() {
     setArtwork(artwork)
     setTemplate(template)
     setFiles(files)
+
+    setLoading(null)
   }
 
   function reload() {
-    // const host = 'http://localhost:9005'
-    const host = ''
+    const host = 'http://localhost:9005'
+    // const host = ''
     iframeRef.current.src = `${host}/preview/${id}/sources/${template?.sources?.index}`
     setLogs([])
   }
@@ -70,30 +72,22 @@ function IDE() {
     )
   }
 
-  // function generateMedia() {
-  //   setLoading(true)
-  //   fetch(`/${account}/nft/${id}/media`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'x-auth-token': sessionStorage.getItem(account)
-  //     }
-  //   }).then(res => {
-  //     navigate.push(`/account/nft/${id}/mint`)
-  //     setLoading(false)
-  //   })
-  // }
+  async function generateMedia() {
+    setLoading('Generating Media Files')
+
+    await generateArtwork(id, account)
+    navigate(`/account/artworks/${id}/metadata`)
+
+    setLoading(null)
+  }
 
   return (
     <div className="IDE">
-      {/* {loading && <Loader message="Generating Media Files" />} */}
+      {loadingMessage && <Loader message={loadingMessage} />}
 
-      {/* {!loading && (
-        <div className="Header"></div>
-      )} */}
-
-      {!loading && (
+      {!loadingMessage && (
         <div className="Workspace">
-          {/* //TODO: refactor and redesign files */}
+          {/* //TODO: refactor and redesign */}
           <div className="fileTree">
             <FileList data={files} index={0} />
           </div>
@@ -101,13 +95,11 @@ function IDE() {
           <Editor
             draftId={id}
             file={template?.sources?.main}
-          // setSaveMethod={setSaveMethod}
-          // reloadFrame={reload}
           />
         </div>
       )}
 
-      {!loading && (
+      {!loadingMessage && (
         <div className="Preview">
           <div className="Controls">
             <div style={{ float: "left" }}>
@@ -139,11 +131,11 @@ function IDE() {
         </div>
       )}
 
-      {/* {!loading && (
+      {!loadingMessage && (
         <div className="Actions">
           <button href="#" onClick={generateMedia}>Save</button>
         </div>
-      )} */}
+      )}
     </div>
   )
 }
@@ -170,9 +162,7 @@ function FileList({ data, depth }) {
   )
 }
 
-function Editor({ draftId, file, setSaveMethod, reloadFrame }) {
-  // const { account } = useAuth()
-
+function Editor({ draftId, file }) {
   const editorRef = useRef()
 
   const [editor, setEditor] = useState(null)
@@ -202,10 +192,8 @@ function Editor({ draftId, file, setSaveMethod, reloadFrame }) {
             const language = res.headers.get('Content-type').split(';')[0].split('/')[1]
 
             editor.setValue(source)
-            monaco.editor.setModelLanguage(editor.getModel(), language)
+            // monaco.editor.setModelLanguage(editor.getModel(), language)
           })
-
-        // setSaveMethod(() => save)
       }
     }
   }, [editor, file])

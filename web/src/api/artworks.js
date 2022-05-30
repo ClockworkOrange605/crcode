@@ -12,4 +12,19 @@ const get = async (id, account) => {
   return response.json()
 }
 
-export { get }
+const generate = async (id, account) => {
+  const token = sessionStorage.getItem(account)
+
+  const response = await fetch(`/artworks/${id}/generate`,
+    {
+      method: 'POST',
+      headers: {
+        'x-auth-token': token
+      }
+    }
+  )
+
+  return response.json()
+}
+
+export { get, generate }

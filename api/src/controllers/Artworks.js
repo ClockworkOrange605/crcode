@@ -1,4 +1,5 @@
 import { find } from '../models/Artwork.js'
+import { recordPage } from '../utils/chromium.js'
 
 const get = async (req, res) => {
   const { account } = res.locals
@@ -16,4 +17,20 @@ const get = async (req, res) => {
   }
 }
 
-export { get }
+const generate = async (req, res) => {
+  const { id } = req.params
+  const { account } = res.locals
+
+  //TODO: move host to config
+  const url = `${'http://localhost:4000'}/preview/${id}/sources/index.html`
+  const path = `/storage/artworks/${id}/media/`
+
+  try {
+    await recordPage(url, path)
+    res.send({ status: 'ok' })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+export { get, generate }

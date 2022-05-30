@@ -1,0 +1,129 @@
+.IDE {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  grid-template-areas:
+    "loader loader"
+    "header header"
+    "workspace preview"
+    "actions actions";
+  min-width: 100px;
+  min-height: 300px;
+  grid-gap: 0px;
+  padding-top: 10px;
+}
+
+.IDE .loader {
+  grid-area: loader;
+}
+
+.IDE .Header {
+  grid-area: header;
+  background: transparent;
+  text-align: center;
+  margin: -15px auto;
+}
+
+.IDE .Workspace {
+  grid-area: workspace;
+}
+
+.IDE .Workspace .fileTree {
+  margin-bottom: -4px;
+}
+
+.IDE .Workspace .fileTree p {
+  width: 75px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 10px;
+  margin: 0;
+  border: 1px solid #333;
+  background-color: #333;
+  border-bottom: none;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.IDE .Workspace .fileTree p:hover {
+  border-color: #444;
+  background-color: #444;
+  color: #aaaaaa;
+}
+
+.IDE .Workspace .fileTree p.selected {
+  border-color: #555;
+  background-color: #555;
+  color: #aaaaaa;
+  cursor: default;
+}
+
+.IDE .Workspace .EditorInstance {
+  min-width: 100px;
+  height: 400px;
+}
+
+.IDE .Preview {
+  grid-area: preview;
+  aspect-ratio: 16 / 9;
+}
+
+.IDE .Preview .Controls {
+  margin-top: -4px;
+  margin-right: 2px;
+}
+
+.IDE .Preview .Window {
+  background-color: white;
+  width: 390px;
+  height: 270px;
+  border: none;
+}
+
+.IDE .Preview .Console {
+  background: #242424;
+  width: 391px;
+  height: 131px;
+  overflow-y: scroll;
+  margin-top: -4px;
+}
+
+.IDE .Preview .Console::-webkit-scrollbar {
+  width: 10px;
+}
+
+.IDE .Preview .Console::-webkit-scrollbar-track {
+  border-left: 1px solid #2b2b2b;
+}
+
+.IDE .Preview .Console::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+}
+
+.IDE .Preview .Console:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(121, 121, 121, .4);
+}
+
+.IDE .Actions {
+  grid-area: actions;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  padding-bottom: 15px;
+}
+
+.IDE .Actions button {
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid var(--primary-account-color);
+  border-radius: 15px;
+  padding: 20px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.IDE .Actions a:hover {
+  border-color: var(--secondary-account-color);
+  color: #aaaaaa;
+}

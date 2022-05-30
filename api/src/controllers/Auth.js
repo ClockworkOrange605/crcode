@@ -18,9 +18,9 @@ const checkAuthorization = (req, res) => {
   const { address } = req.params
 
   if (res.locals.account === address)
-    res.status(403).send({ error: 'Invalid token' })
-  else
     res.send(res.locals)
+  else
+    res.status(403).send({ error: 'Invalid token' })
 }
 
 export { Authorize, checkAuthorization }

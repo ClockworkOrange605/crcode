@@ -3,6 +3,11 @@ const list = async () => {
   return response.json()
 }
 
+const get = async (slug) => {
+  const response = await fetch(`/templates/${slug}`)
+  return response.json()
+}
+
 const copy = async (account, slug, version) => {
   const token = sessionStorage.getItem(account)
 
@@ -19,4 +24,4 @@ const copy = async (account, slug, version) => {
   return response.json()
 }
 
-export { list, copy }
+export { list, get, copy }

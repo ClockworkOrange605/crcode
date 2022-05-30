@@ -6,6 +6,7 @@ import { useMetaMask } from "../../components/App/Auth/MetaMask"
 import { useAuth } from "../../components/App/Auth/Auth"
 
 import Templates from "../Account/Artworks/Create"
+import IDE from "../Account/Artworks/Editor"
 
 const Router = () => {
   return (
@@ -25,7 +26,7 @@ const Router = () => {
       />
       <Route
         path="/account/artworks/:id/editor"
-        element={<RequireAuth>Under the Development</RequireAuth>}
+        element={<RequireAuth><IDE /></RequireAuth>}
       />
 
       <Route

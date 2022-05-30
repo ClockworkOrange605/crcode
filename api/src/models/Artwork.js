@@ -8,7 +8,7 @@ const create = async (data) => {
   return query.insertedId.toString()
 }
 
-const find = (id) =>
+const find = async (id) =>
   dbCollection.findOne(ObjectId(id))
 
 export { create, find }

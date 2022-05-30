@@ -15,4 +15,26 @@ function copyFolder(from, to) {
   })
 }
 
-export { copyFolder }
+async function listFolder(path) {
+  const dir = await fs.promises.opendir(path)
+  const res = []
+
+  let item, total = 0
+  while (item = dir.readSync()) {
+    const [name, size] = [item.name, fs.statSync(`${path}/${item.name}`).size]
+
+    if (item.isDirectory()) {
+      const { files, size } = await listFolder(`${path}/${item.name}/`)
+      res.push({ name, size, dir: true, files })
+      total += size
+    } else {
+      res.push({ name, size })
+      total += size
+    }
+  }
+
+  dir.close()
+  return { files: res, size: total }
+}
+
+export { copyFolder, listFolder }

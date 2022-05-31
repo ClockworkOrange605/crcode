@@ -12,6 +12,6 @@ const find = async (id) =>
   dbCollection.findOne(ObjectId(id))
 
 const update = async (id, data) =>
-  dbCollection.findOneAndUpdate(ObjectId(id), { $set: { ...data } })
+  dbCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: { ...data } })
 
 export { create, find, update }

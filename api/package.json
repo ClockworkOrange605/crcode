@@ -10,6 +10,7 @@
     "glob": "^8.0.3",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.6.0",
+    "node-fetch": "^3.2.4",
     "puppeteer": "^14.1.2",
     "puppeteer-screen-recorder": "^2.0.2"
   },

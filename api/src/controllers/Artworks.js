@@ -1,5 +1,7 @@
-import { find } from '../models/Artwork.js'
+import { find, update } from '../models/Artwork.js'
+
 import { recordPage } from '../utils/chromium.js'
+import { uploadFile, uploadJSON } from '../utils/ipfs.js'
 
 const get = async (req, res) => {
   const { account } = res.locals
@@ -33,4 +35,41 @@ const generate = async (req, res) => {
   }
 }
 
-export { get, generate }
+const metadata = async (req, res) => {
+  const { account } = res.locals
+  const { id } = req.params
+  const { metadata } = req.body
+
+  const url = `/preview/${id}/media`
+  const path = `/storage/artworks/${id}/media`
+
+  const [animation_url, image_url] = [
+    `${url}/${metadata.animation}`,
+    `${url}/${metadata.image}`
+  ]
+
+  const [animation_hash, image_hash] = await Promise.all([
+    await uploadFile(`${path}/${metadata.animation}`),
+    await uploadFile(`${path}/${metadata.image}`)
+  ])
+
+  delete metadata.animation
+  const metadataFile = {
+    ...metadata,
+    image: image_hash,
+    animation_url: animation_hash
+  }
+
+  const metadata_hash = await uploadJSON(metadataFile)
+  const metadata_url = metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/')
+
+  await update(id, {
+    image_url, animation_url,
+    metadata: metadataFile,
+    metadata_hash, metadata_url
+  })
+
+  res.send({ id, metadata_url })
+}
+
+export { get, generate, metadata }

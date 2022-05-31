@@ -27,4 +27,21 @@ const generate = async (id, account) => {
   return response.json()
 }
 
-export { get, generate }
+const metadata = async (id, account, data) => {
+  const token = sessionStorage.getItem(account)
+
+  const response = await fetch(`/artworks/${id}/metadata`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token
+      },
+      body: JSON.stringify(data)
+    }
+  )
+
+  return response.json()
+}
+
+export { get, generate, metadata }

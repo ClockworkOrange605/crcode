@@ -8,6 +8,7 @@ import { useAuth } from "../../components/App/Auth/Auth"
 import Templates from "../Account/Artworks/Create"
 import IDE from "../Account/Artworks/Editor"
 import Metadata from "../Account/Artworks/Update"
+import Mint from '../Account/Artworks/Publish'
 
 const Router = () => {
   return (
@@ -35,7 +36,7 @@ const Router = () => {
       />
       <Route
         path="/account/artworks/:id/publish"
-        element={<RequireAuth>Under the Development</RequireAuth>}
+        element={<RequireAuth><Mint /></RequireAuth>}
       />
 
       <Route

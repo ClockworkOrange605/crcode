@@ -1,7 +1,17 @@
-import { find, update } from '../models/Artwork.js'
+import { findAll, find, update } from '../models/Artwork.js'
 
 import { recordPage } from '../utils/chromium.js'
 import { uploadFile, uploadJSON } from '../utils/ipfs.js'
+
+const list = async (req, res) => {
+  const { account } = res.locals
+
+  try {
+    res.send(await findAll({ account }))
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
 
 const get = async (req, res) => {
   const { account } = res.locals
@@ -72,4 +82,4 @@ const metadata = async (req, res) => {
   res.send({ id, metadata_url })
 }
 
-export { get, generate, metadata }
+export { list, get, generate, metadata }

@@ -1,3 +1,17 @@
+const list = async (account) => {
+  const token = sessionStorage.getItem(account)
+
+  const response = await fetch(`/artworks/`,
+    {
+      headers: {
+        'x-auth-token': token
+      }
+    }
+  )
+
+  return response.json()
+}
+
 const get = async (id, account) => {
   const token = sessionStorage.getItem(account)
 
@@ -44,4 +58,4 @@ const metadata = async (id, account, data) => {
   return response.json()
 }
 
-export { get, generate, metadata }
+export { list, get, generate, metadata }

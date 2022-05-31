@@ -8,10 +8,14 @@ const create = async (data) => {
   return query.insertedId.toString()
 }
 
-const find = async (id) =>
-  dbCollection.findOne(ObjectId(id))
-
 const update = async (id, data) =>
   dbCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: { ...data } })
 
-export { create, find, update }
+const find = async (id) =>
+  dbCollection.findOne(ObjectId(id))
+
+//TODO: naming convention
+const findAll = async (query) =>
+  dbCollection.find({ ...query }).toArray()
+
+export { create, find, update, findAll }

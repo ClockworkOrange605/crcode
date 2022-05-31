@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom"
 import { useMetaMask } from "../../components/App/Auth/MetaMask"
 import { useAuth } from "../../components/App/Auth/Auth"
 
+import Artworks from '../Account/Artworks/List'
 import Templates from "../Account/Artworks/Create"
 import IDE from "../Account/Artworks/Editor"
 import Metadata from "../Account/Artworks/Update"
@@ -20,7 +21,7 @@ const Router = () => {
 
       <Route
         path="/account/artworks"
-        element={<RequireAuth>Under the Development</RequireAuth>}
+        element={<RequireAuth><Artworks /></RequireAuth>}
       />
       <Route
         path="/account/artworks/create"

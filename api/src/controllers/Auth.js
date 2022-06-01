@@ -5,13 +5,18 @@ const Authorize = (req, res) => {
   const { address } = req.params
   const { signature } = req.body
 
-  const account = recoverAddress(`${address}@CreativeCoding`, signature)
+  try {
+    const account = recoverAddress(`${address}@CreativeCoding`, signature)
 
-  if (account == address) {
-    const token = signToken(account)
-    res.send({ account, token })
-  } else
-    res.status(403).send({ error: 'Invalid signature' })
+    if (account == address) {
+      const token = signToken(account)
+      res.send({ account, token })
+    } else
+      res.status(401).send({ error: 'Invalid signature' })
+  } catch (error) {
+    res.status(500).send({ error: error.message })
+  }
+
 }
 
 const checkAuthorization = (req, res) => {
@@ -20,7 +25,7 @@ const checkAuthorization = (req, res) => {
   if (res.locals.account === address)
     res.send(res.locals)
   else
-    res.status(403).send({ error: 'Invalid token' })
+    res.status(401).send({ error: 'Invalid token' })
 }
 
 export { Authorize, checkAuthorization }

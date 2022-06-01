@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer'
 import { PuppeteerScreenRecorder } from 'puppeteer-screen-recorder'
 import ffmpeg from 'fluent-ffmpeg'
 
+//TODO: refactor on production like resources
 const recordPage = async (url, path) => {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium',

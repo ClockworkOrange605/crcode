@@ -34,7 +34,7 @@ const copy = async (req, res) => {
       `/storage/artworks/${id}/sources/`
     )
 
-    res.send({ id })
+    res.send({ id, status: "draft" })
   } catch (error) {
     res.status(500).send({ error: error.message })
   }

@@ -3,7 +3,6 @@ import { useRef, useState, useEffect, Fragment } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Console, Hook, Decode } from 'console-feed'
 
-import { useAuth } from '../../../components/App/Auth/Auth'
 import Loader from '../../../components/App/Loader/Loader'
 
 import { get as getArtwork, generate as generateArtwork } from '../../../api/artworks'
@@ -21,7 +20,6 @@ function IDE() {
   const consoleRef = useRef()
 
   const { id } = useParams()
-  const { account } = useAuth()
 
   const [loadingMessage, setLoading] = useState(null)
 
@@ -31,17 +29,14 @@ function IDE() {
 
   const [logs, setLogs] = useState([])
 
-  useEffect(() => {
-    if (account && id)
-      load(id, account)
-  }, [account, id])
+  useEffect(() => { load() }, [])
 
-  const load = async (id, account) => {
+  const load = async () => {
     setLoading('Initializing Editor')
 
-    const artwork = await getArtwork(id, account)
+    const artwork = await getArtwork(id)
     const template = await getTemplate(artwork.template)
-    const { files } = await getFiles(id, account)
+    const { files } = await getFiles(id)
 
     setArtwork(artwork)
     setTemplate(template)
@@ -75,7 +70,7 @@ function IDE() {
   async function generateMedia() {
     setLoading('Generating Media Files')
 
-    await generateArtwork(id, account)
+    await generateArtwork(id)
     navigate(`/account/artworks/${id}/metadata`)
 
     setLoading(null)

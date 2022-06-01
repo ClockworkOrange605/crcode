@@ -7,13 +7,20 @@ const checkAccess = async (req, res, next) => {
   try {
     const artwork = await findArtwork(id, { projection: { account: true } })
 
-    if (account !== artwork.account)
+    if (!artwork) {
+      res.status(404).send({ error: "Not Found" })
+      return
+    }
+
+    if (account !== artwork.account) {
       res.status(403).send({ error: "Forbidden" })
-    else
-      next()
+      return
+    }
+
+    next()
   }
   catch (error) {
-    res.status(403).send({ error: error.message })
+    res.status(500).send({ error: error.message })
   }
 }
 

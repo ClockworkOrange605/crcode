@@ -16,7 +16,7 @@ function MetaMaskProvider({ children }) {
 
   useEffect(() => {
     ethereum && check()
-    ethereum && ethereum.on('accountsChanged', setAccounts)
+    ethereum && ethereum.on('accountsChanged', () => { window.location.reload() })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethereum])
 

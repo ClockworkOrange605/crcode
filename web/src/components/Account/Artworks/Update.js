@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 
-import { useAuth } from '../../../components/App/Auth/Auth'
 import Loader from '../../../components/App/Loader/Loader'
 
 import { get as getArtwork, metadata as uploadMetadata } from '../../../api/artworks'
@@ -14,7 +13,6 @@ import './Update.css'
 function Update() {
   const navigate = useNavigate()
 
-  const { account } = useAuth()
   const { id } = useParams()
 
   const [artwork, setArtwork] = useState()
@@ -29,8 +27,8 @@ function Update() {
   const load = async () => {
     setLoading("  ")
 
-    const data = await getArtwork(id, account)
-    const { size } = await getFiles(id, account)
+    const data = await getArtwork(id)
+    const { size } = await getFiles(id)
 
     setArtwork(data)
     setSize(sizeConverter(size))
@@ -76,7 +74,7 @@ function Update() {
 
     setLoading("Uploading Metadata to IPFS")
 
-    await uploadMetadata(id, account, { metadata })
+    await uploadMetadata(id, { metadata })
 
     navigate(`/account/artworks/${id}/publish`)
   }

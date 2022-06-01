@@ -7,8 +7,8 @@ import { getFileList as getFileTree } from '../controllers/Editor.js'
 
 const router = new Router()
 
-router.use(AuthMiddleware, checkAccess)
+router.use(AuthMiddleware)
 
-router.get('/:id/files', getFileTree)
+router.get('/:id/files', checkAccess, getFileTree)
 
 export default router

@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { list } from '../../../api/artworks'
-import { useAuth } from '../../../components/App/Auth/Auth'
 import Loader from '../../../components/App/Loader/Loader'
 import iconAdd from '../../../assets/icons/add.svg'
 import iconImage from '../../../assets/icons/image.svg'
@@ -9,15 +8,13 @@ import iconImage from '../../../assets/icons/image.svg'
 import './List.css'
 
 function Drafts() {
-  const { account } = useAuth()
-
   const [artworks, setArtworks] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => { load() }, [])
 
   const load = async () => {
-    const data = await list(account)
+    const data = await list()
     setArtworks(data)
     setLoading(false)
   }
@@ -69,7 +66,7 @@ const ArtworksList = ({ data }) => {
         <Link to={getLink(item)} key={item._id} >
           <div className="Draft">
             <picture>
-              <source srcSet={item?.image_url} />
+              <source srcSet={item?.image} />
               <img src={iconImage} alt="" />
             </picture>
             <p>

@@ -1,19 +1,13 @@
-const auth = async (address, signature) => {
-  const response = await fetch(`/auth/${address}`, {
+import { request, authorizedRequest } from "../utils/api"
+
+const auth = async (address, signature) =>
+  request(`/auth/${address}`, {
     method: 'POST',
     headers: { 'Content-type': 'application/json' },
     body: JSON.stringify({ signature })
   })
 
-  return response.json()
-}
-
-const check = async (address) => {
-  const response = await fetch(`/auth/${address}`, {
-    headers: { 'x-auth-token': sessionStorage.getItem(address) }
-  })
-
-  return response.json()
-}
+const check = async (address) =>
+  authorizedRequest(`/auth/${address}`)
 
 export { auth, check }

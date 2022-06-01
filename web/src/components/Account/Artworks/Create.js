@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useAuth } from '../../App/Auth/Auth'
 import { list, copy } from "../../../api/templates"
 
 import Loader from '../../../components/App/Loader/Loader'
@@ -8,8 +7,6 @@ import './Create.css'
 
 const CreatePage = () => {
   const navigate = useNavigate()
-
-  const { account } = useAuth()
 
   const [templates, setTemplates] = useState()
   const [loading, setLoading] = useState(true)
@@ -23,7 +20,7 @@ const CreatePage = () => {
   }
 
   const selectTemplate = async (template) => {
-    const { id } = await copy(account, template.slug, template.sources.version)
+    const { id } = await copy(template.slug, template.sources.version)
     navigate(`/account/artworks/${id}/editor`)
   }
 

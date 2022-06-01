@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 
 import { useParams, useNavigate } from 'react-router'
 
-import { useMetaMask } from '../../../components/App/Auth/MetaMask'
-import { useAuth } from "../../../components/App/Auth/Auth"
+// import { useMetaMask } from '../../../components/App/Auth/MetaMask'
 
 import { get as getArtwork } from '../../../api/artworks'
 
@@ -18,8 +17,7 @@ function Publish() {
 
   const codeRef = useRef()
 
-  const { address, ethereum } = useMetaMask()
-  const { account } = useAuth()
+  // const { address, ethereum } = useMetaMask()
   const { id } = useParams()
 
   const [data, setData] = useState()
@@ -33,9 +31,10 @@ function Publish() {
   const load = async () => {
     setLoading(true)
 
-    const data = await getArtwork(id, account)
+    const data = await getArtwork(id)
 
-    const response = await fetch(data.metadata_url)
+    const response = await fetch(
+      data.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/'))
     const metadata = await response.json()
 
     //ISSUE: https://github.com/microsoft/monaco-editor/issues/3105

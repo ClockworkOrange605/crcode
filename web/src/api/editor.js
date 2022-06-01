@@ -1,15 +1,6 @@
-const getFiles = async (id, account) => {
-  const token = sessionStorage.getItem(account)
+import { authorizedRequest } from "../utils/api"
 
-  const response = await fetch(`/editor/${id}/files/`,
-    {
-      headers: {
-        'x-auth-token': token
-      }
-    }
-  )
-
-  return response.json()
-}
+const getFiles = async (id) =>
+  authorizedRequest(`/editor/${id}/files/`)
 
 export { getFiles }

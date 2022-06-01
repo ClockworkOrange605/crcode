@@ -10,7 +10,7 @@ function AuthProvider({ children }) {
 
   async function auth(address, signature) {
     const { account, token } = await AuthRequest(address, signature)
-    sessionStorage.setItem(account, token)
+    sessionStorage.setItem('auth', token)
     setAccount(account)
     return account
   }

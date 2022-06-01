@@ -1,27 +1,15 @@
-const list = async () => {
-  const response = await fetch('/templates')
-  return response.json()
-}
+import { request, authorizedRequest } from "../utils/api"
 
-const get = async (slug) => {
-  const response = await fetch(`/templates/${slug}`)
-  return response.json()
-}
+const list = async () =>
+  request('/templates')
 
-const copy = async (account, slug, version) => {
-  const token = sessionStorage.getItem(account)
+const get = async (slug) =>
+  request(`/templates/${slug}`)
 
-  const response = await fetch(`/templates/${slug}/${version}/copy/`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-        'x-auth-token': token
-      }
-    }
-  )
-
-  return response.json()
-}
+const copy = async (slug, version) =>
+  authorizedRequest(`/templates/${slug}/${version}/copy/`, {
+    method: 'POST',
+    headers: { 'Content-type': 'application/json' }
+  })
 
 export { list, get, copy }

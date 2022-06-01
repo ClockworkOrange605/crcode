@@ -1,8 +1,7 @@
 import fs from 'fs'
 
-import { copyFolder } from '../utils/fs.js'
-
 import { create } from '../models/Artwork.js'
+import { copyFolder } from '../utils/fs.js'
 
 const list = (req, res) => {
   try {
@@ -28,7 +27,7 @@ const copy = async (req, res) => {
   const { account } = res.locals
 
   try {
-    const id = await create({ account, template, version })
+    const id = await create({ account, status: "draft", template, version })
 
     copyFolder(
       `/storage/templates/${template}/sources/${version}/**`,

@@ -24,8 +24,17 @@
   cursor: pointer;
 }
 
-.Drafts .Draft img {
+.Drafts .Draft picture {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 165px;
+}
+
+.Drafts .Draft picture>img {
   max-height: 150px;
+  max-width: 150px;
   padding-top: 10px;
 }
 

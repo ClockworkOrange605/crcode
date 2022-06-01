@@ -3,19 +3,23 @@ import { ObjectId } from 'mongodb'
 
 const dbCollection = db.collection('artworks')
 
-const create = async (data) => {
-  const query = await dbCollection.insertOne(data)
-  return query.insertedId.toString()
-}
+const create = async (data) =>
+  (await dbCollection.insertOne(data)).insertedId.toString()
 
-const update = async (id, data) =>
+const updateOne = async (filter, data) =>
+  dbCollection.updateOne(filter, { $set: { ...data } })
+
+const updateMany = async (filter, data) =>
+  dbCollection.updateMany(filter, { $set: { ...data } })
+
+const find = async (filter) =>
+  dbCollection.find(filter).toArray()
+
+const findById = async (id, options = {}) =>
+  dbCollection.findOne(ObjectId(id), options)
+
+const updateById = async (id, data) =>
   dbCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: { ...data } })
 
-const find = async (id) =>
-  dbCollection.findOne(ObjectId(id))
 
-//TODO: naming convention
-const findAll = async (query) =>
-  dbCollection.find({ ...query }).toArray()
-
-export { create, find, update, findAll }
+export { create, updateOne, updateMany, updateById, find, findById }

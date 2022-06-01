@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react'
-
+import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-import { useAuth } from '../../../components/App/Auth/Auth'
-
 import { list } from '../../../api/artworks'
-
+import { useAuth } from '../../../components/App/Auth/Auth'
 import Loader from '../../../components/App/Loader/Loader'
-
 import iconAdd from '../../../assets/icons/add.svg'
 import iconImage from '../../../assets/icons/image.svg'
 
@@ -16,27 +11,67 @@ import './List.css'
 function Drafts() {
   const { account } = useAuth()
 
-  const [data, setData] = useState([])
+  const [artworks, setArtworks] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => { load() }, [])
 
   const load = async () => {
     const data = await list(account)
-    setData(data)
+    setArtworks(data)
     setLoading(false)
   }
 
   return (
-    <div className="Drafts">
+    <Fragment>
       {loading && <Loader />}
 
-      {!loading && <h1>Choose NFT Draft</h1>}
+      {!loading && (
+        <div className="Drafts">
+          <h1>Choose NFT Draft</h1>
 
-      {!loading && data && data.map(item =>
-        <Link to={`/account/artworks/${item._id}/editor/`} key={item._id} >
+          <ArtworksList data={artworks} />
+
+          <Link to='/account/artworks/create'>
+            <div key={0} className="Draft">
+              <picture>
+                <img src={iconAdd} alt="" />
+              </picture>
+              <p>Create New NFT</p>
+            </div>
+          </Link>
+        </div>
+      )}
+    </Fragment>
+  )
+}
+
+const ArtworksList = ({ data }) => {
+
+  const getLink = (item) => {
+    switch (item?.status) {
+      case 'draft':
+        return `/account/artworks/${item._id}/editor/`
+      case 'finished':
+        return `/account/artworks/${item._id}/metadata`
+      case 'ready':
+        return `/account/artworks/${item._id}/publish`
+      case 'minted':
+        return `#`
+      default:
+        return `/account/artworks/${item._id}/editor/`
+    }
+  }
+
+  return (
+    <Fragment>
+      {data && data.map(item =>
+        <Link to={getLink(item)} key={item._id} >
           <div className="Draft">
-            <img src={iconImage} alt="" />
+            <picture>
+              <source srcSet={item?.image_url} />
+              <img src={iconImage} alt="" />
+            </picture>
             <p>
               {item?.metadata?.name ||
                 `${item._id.slice(0, 5)} . . . ${item._id.slice(-5)}`}
@@ -44,16 +79,7 @@ function Drafts() {
           </div>
         </Link>
       )}
-
-      {!loading && (
-        <Link to='/account/artworks/create'>
-          <div key={0} className="Draft">
-            <img src={iconAdd} alt="" />
-            <p>Create New NFT</p>
-          </div>
-        </Link>
-      )}
-    </div>
+    </Fragment >
   )
 }
 

@@ -1,13 +1,16 @@
 import { Router } from 'express'
 
 import { AuthMiddleware } from '../middlewares/Auth.js'
-import { list, get, generate, metadata } from '../controllers/Artworks.js'
+import { checkAccess } from '../middlewares/Artworks.js'
+import { list, get, generateMedia, updateMetadata } from '../controllers/Artworks.js'
 
 const router = new Router()
 
-router.get('/', AuthMiddleware, list)
-router.get('/:id', AuthMiddleware, get)
-router.post('/:id/generate', AuthMiddleware, generate)
-router.post('/:id/metadata', AuthMiddleware, metadata)
+router.use(AuthMiddleware)
+
+router.get('/', list)
+router.get('/:id', checkAccess, get)
+router.post('/:id/generate', checkAccess, generateMedia)
+router.post('/:id/metadata', checkAccess, updateMetadata)
 
 export default router

@@ -1,17 +1,16 @@
 import { useRef, useState, useEffect, Fragment } from 'react'
-
 import { useParams, useNavigate } from 'react-router-dom'
 import { Console, Hook, Decode } from 'console-feed'
-
-import Loader from '../../../components/App/Loader/Loader'
 
 import { get as getArtwork, generate as generateArtwork } from '../../../api/artworks'
 import { get as getTemplate } from '../../../api/templates'
 import { getFiles } from '../../../api/editor'
 
-import * as monaco from 'monaco-editor'
+import Loader from '../../../components/App/Loader/Loader'
 
 import './Editor.css'
+
+import * as monaco from 'monaco-editor'
 
 function IDE() {
   const navigate = useNavigate()
@@ -23,31 +22,36 @@ function IDE() {
 
   const [loadingMessage, setLoading] = useState(null)
 
-  const [artwork, setArtwork] = useState({})
+  // const [artwork, setArtwork] = useState({})
   const [template, setTemplate] = useState()
   const [files, setFiles] = useState([])
 
   const [logs, setLogs] = useState([])
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    const load = async () => {
+      setLoading('Initializing Editor')
 
-  const load = async () => {
-    setLoading('Initializing Editor')
+      const artwork = await getArtwork(id)
+      const template = await getTemplate(artwork.template)
+      const { files } = await getFiles(id)
 
-    const artwork = await getArtwork(id)
-    const template = await getTemplate(artwork.template)
-    const { files } = await getFiles(id)
+      // setArtwork(artwork)
+      setTemplate(template)
+      setFiles(files)
 
-    setArtwork(artwork)
-    setTemplate(template)
-    setFiles(files)
+      setLoading(null)
+    }
 
-    setLoading(null)
-  }
+    load()
+  }, [id])
+
+  useEffect(() => {
+    consoleRef.current.scrollTop = consoleRef.current.scrollHeight
+  }, [logs])
 
   function reload() {
-    const host = 'http://localhost:9005'
-    // const host = ''
+    const host = 'http://localhost:9005' //TODO: make better config
     iframeRef.current.src = `${host}/preview/${id}/sources/${template?.sources?.index}`
     setLogs([])
   }
@@ -56,10 +60,6 @@ function IDE() {
     iframeRef.current.src = ''
     setLogs([])
   }
-
-  useEffect(() => {
-    consoleRef.current.scrollTop = consoleRef.current.scrollHeight
-  }, [logs])
 
   function captureLogs() {
     Hook(iframeRef.current.contentWindow.console,
@@ -77,64 +77,54 @@ function IDE() {
   }
 
   return (
-    <div className="IDE">
+    <Fragment>
       {loadingMessage && <Loader message={loadingMessage} />}
 
       {!loadingMessage && (
-        <div className="Workspace">
-          {/* //TODO: refactor and redesign */}
-          <div className="fileTree">
-            <FileList data={files} index={0} />
-          </div>
-
-          <Editor
-            draftId={id}
-            file={template?.sources?.main}
-          />
-        </div>
-      )}
-
-      {!loadingMessage && (
-        <div className="Preview">
-          <div className="Controls">
-            <div style={{ float: "left" }}>
-              {/* <button onClick={() => saveMethod()}>▶ Run</button> */}
-              <button onClick={() => reload()}>▶ Run</button>
-              <button onClick={() => stop()}>◼ Stop</button>
+        <div className="IDE">
+          <div className="Workspace">
+            <div className="fileTree">
+              <FileList data={files} index={0} />
             </div>
 
-            <label htmlFor="AutoReload" style={{ float: "right", color: "#aaa", cursor: "not-allowed" }}>
-              <input id="AutoReload" type="checkbox" disabled></input>
-              Auto Reload
-            </label>
+            <Editor id={id} file={template?.sources?.main} />
           </div>
 
-          <iframe
-            title="Preview"
-            className="Window"
-            ref={iframeRef}
-            // TODO: try to capture logs earlier
-            onLoad={captureLogs}
-          />
+          <div className="Preview">
+            <div className="Controls">
+              <div style={{ float: "left" }}>
+                {/* <button onClick={() => saveMethod()}>▶ Run</button> */}
+                <button onClick={() => reload()}>▶ Run</button>
+                <button onClick={() => stop()}>◼ Stop</button>
+              </div>
 
-          <div className="Console" ref={consoleRef}>
-            <Console
-              variant="dark"
-              logs={logs}
+              {/* <label htmlFor="AutoReload" style={{ float: "right", color: "#aaa", cursor: "not-allowed" }}>
+                <input id="AutoReload" type="checkbox" disabled></input>
+                Auto Reload
+              </label> */}
+            </div>
+
+            <iframe className="Window" ref={iframeRef} title="Preview"
+              // TODO: try to capture logs earlier
+              onLoad={captureLogs}
             />
-          </div>
-        </div>
-      )}
 
-      {!loadingMessage && (
-        <div className="Actions">
-          <button href="#" onClick={generateMedia}>Save</button>
+            <div className="Console" ref={consoleRef}>
+              <Console variant="dark" logs={logs} />
+            </div>
+          </div>
+
+          <div className="Actions">
+            <button href="#" onClick={generateMedia}>Save</button>
+          </div>
+
         </div>
       )}
-    </div>
+    </Fragment>
   )
 }
 
+//TODO: refactor and redesign
 function FileList({ data, depth }) {
   return (
     <Fragment>
@@ -153,11 +143,11 @@ function FileList({ data, depth }) {
           )
         ))
       }
-    </Fragment >
+    </Fragment>
   )
 }
 
-function Editor({ draftId, file }) {
+function Editor({ id, file }) {
   const editorRef = useRef()
 
   const [editor, setEditor] = useState(null)
@@ -174,24 +164,24 @@ function Editor({ draftId, file }) {
 
       setEditor(editorInstance)
     }
-  }, [])
+  }, [editor])
 
   useEffect(() => {
     if (editor && file) {
-      const filepath = `/preview/${draftId}/sources/${file}`
+      const filepath = `/preview/${id}/sources/${file}`
 
       if (editor) {
         fetch(filepath)
           .then(async (res) => {
             const source = await res.text()
-            const language = res.headers.get('Content-type').split(';')[0].split('/')[1]
-
             editor.setValue(source)
+
+            // const language = res.headers.get('Content-type').split(';')[0].split('/')[1]
             // monaco.editor.setModelLanguage(editor.getModel(), language)
           })
       }
     }
-  }, [editor, file])
+  }, [id, file, editor])
 
   // function save() {
   //   const content = editor.getValue()

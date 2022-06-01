@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
 
 import Loader from '../../../components/App/Loader/Loader'
@@ -22,19 +22,21 @@ function Update() {
 
   const [loadingMessage, setLoading] = useState(null)
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    const load = async () => {
+      setLoading("  ")
 
-  const load = async () => {
-    setLoading("  ")
+      const data = await getArtwork(id)
+      const { size } = await getFiles(id)
 
-    const data = await getArtwork(id)
-    const { size } = await getFiles(id)
+      setArtwork(data)
+      setSize(sizeConverter(size))
 
-    setArtwork(data)
-    setSize(sizeConverter(size))
+      setLoading()
+    }
 
-    setLoading()
-  }
+    load()
+  }, [id])
 
   function openPopup(event) {
     event.preventDefault()
@@ -80,90 +82,88 @@ function Update() {
   }
 
   return (
-    <form id="MinterForm"
-      onSubmit={submit}
-    >
+    <Fragment>
       {loadingMessage && <Loader message={loadingMessage} />}
 
       {!loadingMessage && (
-        <div className="Minter">
-          {/* <div className="Header">
-            <h1>Token Metadata</h1>
-          </div> */}
+        <form id="MinterForm" onSubmit={submit} >
+          <div className="Minter">
+            {/* <div className="Header"><h1>Token Metadata</h1></div> */}
 
-          <div className="Metadata">
-            <label htmlFor="name">
-              <span>Name</span>
-              <input
-                name="name"
-                type="text"
-                required
-                placeholder="Token Name"
-                defaultValue={artwork?.metadata?.name}
-              />
-            </label>
+            <div className="Metadata">
+              <label htmlFor="name">
+                <span>Name</span>
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="Token Name"
+                  defaultValue={artwork?.metadata?.name}
+                />
+              </label>
 
-            <label htmlFor="description">
-              <span>Description</span>
-              <textarea
-                name="description"
-                required
-                placeholder="Token Description"
-                defaultValue={artwork?.metadata?.description}
-              />
-            </label>
+              <label htmlFor="description">
+                <span>Description</span>
+                <textarea
+                  name="description"
+                  required
+                  placeholder="Token Description"
+                  defaultValue={artwork?.metadata?.description}
+                />
+              </label>
 
-            <label>
-              <span>Attributes</span>
-              <p>Library: {artwork?.template}</p>
-              <p>Library Version: {artwork?.version}</p>
-              <p>Sources Size: {size}</p>
-            </label>
-          </div>
+              <label>
+                <span>Attributes</span>
+                <p>Library: {artwork?.template}</p>
+                <p>Library Version: {artwork?.version}</p>
+                <p>Sources Size: {size}</p>
+              </label>
+            </div>
 
-          <div className="Media">
-            <label>
-              <span>
-                Image
-                <button style={{ float: 'right' }}
-                  onClick={openPopup}
-                >🎨 Change</button>
-              </span>
-              <img width="450" alt="" src={`/preview/${id}/media/${selectedImage}`} />
-              <input name="image" type="hidden" defaultValue={selectedImage} />
-            </label>
+            <div className="Media">
+              <label>
+                <span>
+                  Image
+                  <button style={{ float: 'right' }}
+                    onClick={openPopup}
+                  >🎨 Change</button>
+                </span>
+                <img width="450" alt="" src={`/preview/${id}/media/${selectedImage}`} />
+                <input name="image" type="hidden" defaultValue={selectedImage} />
+              </label>
 
-            <label>
-              <span>Animation</span>
-              <video width="450" muted autoPlay loop controls controlsList="nodownload" src={`/preview/${id}/media/demo.mp4`} />
-              <input name="animation" type="hidden" defaultValue={`demo.mp4`} />
-            </label>
-          </div>
+              <label>
+                <span>Animation</span>
+                <video width="450" muted autoPlay loop controls controlsList="nodownload" src={`/preview/${id}/media/demo.mp4`} />
+                <input name="animation" type="hidden" defaultValue={`demo.mp4`} />
+              </label>
+            </div>
 
-          <div className="Actions">
-            <button type="submit">Save</button>
-          </div>
+            <div className="Actions">
+              <button type="submit">Save</button>
+            </div>
 
-          <div className="Popup">
-            <h1>Select Image</h1>
-            <span onClick={closePopup} className="CloseButton">❌</span>
-            <div className="Images">
-              {new Array(9).fill("", 0, 9).map((p, i) =>
-                <picture key={i}
-                  className={Boolean(
-                    `/preview/${id}/media/${selectedImage}` ===
-                    `/preview/${id}/media/preview_${i + 1}.png`
-                  ) ? 'selected' : ''}
-                  onClick={() => { selectImage(`preview_${i + 1}.png`) }}
-                >
-                  <img width="250" alt={p} src={`/preview/${id}/media/preview_${i + 1}.png`} />
-                </picture>
-              )}
+            <div className="Popup">
+              <h1>Select Image</h1>
+              <span onClick={closePopup} className="CloseButton">❌</span>
+              <div className="Images">
+                {new Array(9).fill("", 0, 9).map((p, i) =>
+                  <picture key={i}
+                    className={Boolean(
+                      `/preview/${id}/media/${selectedImage}` ===
+                      `/preview/${id}/media/preview_${i + 1}.png`
+                    ) ? 'selected' : ''}
+                    onClick={() => { selectImage(`preview_${i + 1}.png`) }}
+                  >
+                    <img width="250" alt={p} src={`/preview/${id}/media/preview_${i + 1}.png`} />
+                  </picture>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       )}
-    </form>
+    </Fragment>
   )
 }
 

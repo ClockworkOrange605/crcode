@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Fragment } from 'react'
 
-import { useParams, useNavigate } from 'react-router'
+import { useParams/*, useNavigate */ } from 'react-router'
 
 // import { useMetaMask } from '../../../components/App/Auth/MetaMask'
 
@@ -13,7 +13,7 @@ import * as monaco from 'monaco-editor'
 import './Publish.css'
 
 function Publish() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const codeRef = useRef()
 
@@ -26,27 +26,29 @@ function Publish() {
 
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
 
-  const load = async () => {
-    setLoading(true)
+      const data = await getArtwork(id)
 
-    const data = await getArtwork(id)
+      const response = await fetch(
+        data.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/'))
+      const metadata = await response.json()
 
-    const response = await fetch(
-      data.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/'))
-    const metadata = await response.json()
+      //ISSUE: https://github.com/microsoft/monaco-editor/issues/3105
+      const code = await monaco.editor.colorize(
+        JSON.stringify(metadata, null, '\t'), 'json', { tabSize: 2 })
 
-    //ISSUE: https://github.com/microsoft/monaco-editor/issues/3105
-    const code = await monaco.editor.colorize(
-      JSON.stringify(metadata, null, '\t'), 'json', { tabSize: 2 })
+      setData(data)
+      setMetadata(metadata)
+      setCode(code)
 
-    setData(data)
-    setMetadata(metadata)
-    setCode(code)
+      setLoading(false)
+    }
 
-    setLoading(false)
-  }
+    load()
+  }, [id])
 
   //   async function publish() {
   //     //TODO: add env variables
@@ -94,61 +96,53 @@ function Publish() {
   //   }
 
   return (
-    <div className="Publisher">
+    <Fragment>
       {loading && <Loader />}
 
-      {/* {!loading &&
-        <div className="Header">
-          <h1>Review Metadata and Publish</h1>
-        </div>
-      } */}
+      {!loading && (
+        <div className="Publisher">
+          {/* <div className="Header"><h1>Review Metadata and Publish</h1></div> */}
 
-      {!loading &&
-        <div className="Metadata">
-          <h2>
-            Metadata&nbsp;
-            <a href={data?.metadata_url} target="_blank" rel="noreferrer">
-              {data?.metadata_hash}
-            </a>
-          </h2>
-          <code ref={codeRef} dangerouslySetInnerHTML={{ __html: code }}></code>
-        </div>
-      }
+          <div className="Metadata">
+            <h2>
+              Metadata&nbsp;
+              <a href={data?.metadata_url} target="_blank" rel="noreferrer">
+                {data?.metadata_hash}
+              </a>
+            </h2>
+            <code ref={codeRef} dangerouslySetInnerHTML={{ __html: code }}></code>
+          </div>
 
-      {!loading &&
-        <div className="Image">
-          <h2>
-            Image&nbsp;
-            <a target="_blank" rel="noreferrer"
-              href={metadata?.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}
-            >{metadata?.image}</a>
-          </h2>
-          <img width="450" alt=""
-            src={metadata?.image.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
-        </div>
-      }
+          <div className="Image">
+            <h2>
+              Image&nbsp;
+              <a target="_blank" rel="noreferrer"
+                href={metadata?.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}
+              >{metadata?.image}</a>
+            </h2>
+            <img width="450" alt=""
+              src={metadata?.image.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+          </div>
 
-      {!loading &&
-        <div className="Animation">
-          <h2>
-            Animation&nbsp;
-            <a target="_blank" rel="noreferrer"
-              href={metadata?.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')}
-            >{metadata?.animation_url}</a>
-          </h2>
-          <video width="450" muted autoPlay loop controls controlsList="nodownload"
-            src={metadata?.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
-        </div>
-      }
+          <div className="Animation">
+            <h2>
+              Animation&nbsp;
+              <a target="_blank" rel="noreferrer"
+                href={metadata?.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')}
+              >{metadata?.animation_url}</a>
+            </h2>
+            <video width="450" muted autoPlay loop controls controlsList="nodownload"
+              src={metadata?.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+          </div>
 
-      {!loading &&
-        <div className="Actions">
-          <button
-          // onClick={publish}
-          >Publish</button>
+          <div className="Actions">
+            <button
+            // onClick={publish}
+            >Publish</button>
+          </div>
         </div>
-      }
-    </div>
+      )}
+    </Fragment>
   )
 }
 

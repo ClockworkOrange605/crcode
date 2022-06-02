@@ -1,7 +1,7 @@
 import MetaMaskProvider from "./components/App/Auth/MetaMask"
 import AuthProvider from "./components/App/Auth/Auth"
 
-import Layout from './layouts/Main/Main'
+import Layout from './components/layouts/main/Main'
 import Router from './components/App/Router'
 
 function App() {

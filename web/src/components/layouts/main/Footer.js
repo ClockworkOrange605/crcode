@@ -1,6 +1,6 @@
-import BottomMenu from '../../components/App/Menus/BottomMenu'
+import BottomMenu from '../../App/Menus/BottomMenu'
 
-import './Footer.css'
+import './styles/Footer.css'
 
 function Footer() {
   return (

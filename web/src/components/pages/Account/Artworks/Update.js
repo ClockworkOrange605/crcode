@@ -1,14 +1,15 @@
 import { Fragment, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router'
+// import { Link } from 'react-router-dom'
 
-import Loader from '../../../components/App/Loader/Loader'
+import Loader from '../../../App/Loader/Loader'
 
-import { get as getArtwork, metadata as uploadMetadata } from '../../../api/artworks'
-import { getFiles } from '../../../api/editor'
+import { get as getArtwork, metadata as uploadMetadata } from '../../../../api/artworks'
+import { getFiles } from '../../../../api/editor'
 
-import { sizeConverter } from '../../../utils/helpers'
+import { sizeConverter } from '../../../../utils/helpers'
 
-import './Update.css'
+import './styles/Update.css'
 
 function Update() {
   const navigate = useNavigate()
@@ -88,7 +89,10 @@ function Update() {
       {!loadingMessage && (
         <form id="MinterForm" onSubmit={submit} >
           <div className="Minter">
-            {/* <div className="Header"><h1>Token Metadata</h1></div> */}
+            {/* <div className="Header">
+              <h1>Token Metadata</h1>
+              <Link to={`/account/artworks/${id}/editor`}>⬅ Go Back</Link>
+            </div> */}
 
             <div className="Metadata">
               <label htmlFor="name">

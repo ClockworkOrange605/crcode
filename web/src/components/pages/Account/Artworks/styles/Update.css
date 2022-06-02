@@ -11,6 +11,9 @@
 
 .Minter .Header {
   grid-area: header;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: transparent;
   margin: -15px 0;
 }

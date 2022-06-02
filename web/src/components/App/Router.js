@@ -2,16 +2,18 @@ import { useEffect } from "react"
 
 import { Routes, Route } from "react-router-dom"
 
-import { useMetaMask } from "../../components/App/Auth/MetaMask"
-import { useAuth } from "../../components/App/Auth/Auth"
+import { useMetaMask } from "../App/Auth/MetaMask"
+import { useAuth } from "../App/Auth/Auth"
 
-import Artworks from '../Account/Artworks/List'
-import Templates from "../Account/Artworks/Create"
-import IDE from "../Account/Artworks/Editor"
-import Metadata from "../Account/Artworks/Update"
-import Mint from '../Account/Artworks/Publish'
+import Artworks from '../pages/Account/Artworks/List'
+import Templates from "../pages/Account/Artworks/Create"
+import IDE from "../pages/Account/Artworks/Editor"
+import Metadata from "../pages/Account/Artworks/Update"
+import Mint from '../pages/Account/Artworks/Publish'
 
 const Router = () => {
+  // setInterval(() => { console.log(Date.now()) }, 5000)
+
   return (
     <Routes>
       <Route

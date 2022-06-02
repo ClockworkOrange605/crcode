@@ -1,16 +1,17 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 
 import { useParams/*, useNavigate */ } from 'react-router'
+// import { Link } from 'react-router-dom'
 
 // import { useMetaMask } from '../../../components/App/Auth/MetaMask'
 
-import { get as getArtwork } from '../../../api/artworks'
+import { get as getArtwork } from '../../../../api/artworks'
 
-import Loader from '../../../components/App/Loader/Loader'
+import Loader from '../../../App/Loader/Loader'
 
 import * as monaco from 'monaco-editor'
 
-import './Publish.css'
+import './styles/Publish.css'
 
 function Publish() {
   // const navigate = useNavigate()
@@ -101,7 +102,10 @@ function Publish() {
 
       {!loading && (
         <div className="Publisher">
-          {/* <div className="Header"><h1>Review Metadata and Publish</h1></div> */}
+          {/* <div className="Header">
+            <h1>Review Metadata and Publish</h1>
+            <Link to={`/account/artworks/${id}/metadata`}>⬅ Go Back</Link>
+          </div> */}
 
           <div className="Metadata">
             <h2>

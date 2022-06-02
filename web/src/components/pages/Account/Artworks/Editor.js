@@ -1,32 +1,27 @@
 import { useRef, useState, useEffect, Fragment } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Console, Hook, Decode } from 'console-feed'
+import { Console as ConsoleFeed, Hook, Decode } from 'console-feed'
 
-import { get as getArtwork, generate as generateArtwork } from '../../../api/artworks'
-import { get as getTemplate } from '../../../api/templates'
-import { getFiles } from '../../../api/editor'
+import { get as getArtwork, generate as generateArtwork } from '../../../../api/artworks'
+import { get as getTemplate } from '../../../../api/templates'
+import { getFiles } from '../../../../api/editor'
 
-import Loader from '../../../components/App/Loader/Loader'
+import Loader from '../../../App/Loader/Loader'
 
-import './Editor.css'
+import './styles/Editor.css'
 
 import * as monaco from 'monaco-editor'
 
 function IDE() {
   const navigate = useNavigate()
 
-  const iframeRef = useRef()
-  const consoleRef = useRef()
-
   const { id } = useParams()
-
-  const [loadingMessage, setLoading] = useState(null)
-
   // const [artwork, setArtwork] = useState({})
   const [template, setTemplate] = useState()
   const [files, setFiles] = useState([])
 
   const [logs, setLogs] = useState([])
+  const [loadingMessage, setLoading] = useState(null)
 
   useEffect(() => {
     const load = async () => {
@@ -45,27 +40,6 @@ function IDE() {
 
     load()
   }, [id])
-
-  useEffect(() => {
-    consoleRef.current.scrollTop = consoleRef.current.scrollHeight
-  }, [logs])
-
-  function reload() {
-    const host = 'http://localhost:9005' //TODO: make better config
-    iframeRef.current.src = `${host}/preview/${id}/sources/${template?.sources?.index}`
-    setLogs([])
-  }
-
-  function stop() {
-    iframeRef.current.src = ''
-    setLogs([])
-  }
-
-  function captureLogs() {
-    Hook(iframeRef.current.contentWindow.console,
-      log => setLogs(logs => [...logs, Decode(log)])
-    )
-  }
 
   async function generateMedia() {
     setLoading('Generating Media Files')
@@ -91,27 +65,11 @@ function IDE() {
           </div>
 
           <div className="Preview">
-            <div className="Controls">
-              <div style={{ float: "left" }}>
-                {/* <button onClick={() => saveMethod()}>▶ Run</button> */}
-                <button onClick={() => reload()}>▶ Run</button>
-                <button onClick={() => stop()}>◼ Stop</button>
-              </div>
-
-              {/* <label htmlFor="AutoReload" style={{ float: "right", color: "#aaa", cursor: "not-allowed" }}>
-                <input id="AutoReload" type="checkbox" disabled></input>
-                Auto Reload
-              </label> */}
-            </div>
-
-            <iframe className="Window" ref={iframeRef} title="Preview"
-              // TODO: try to capture logs earlier
-              onLoad={captureLogs}
+            <Window url={`/preview/${id}/sources/${template?.sources?.index}`}
+              logs={setLogs}
             />
 
-            <div className="Console" ref={consoleRef}>
-              <Console variant="dark" logs={logs} />
-            </div>
+            <Console logs={logs} />
           </div>
 
           <div className="Actions">
@@ -120,6 +78,62 @@ function IDE() {
 
         </div>
       )}
+    </Fragment>
+  )
+}
+
+function Console({ logs }) {
+  const consoleRef = useRef()
+
+  useEffect(() => {
+    consoleRef.current.scrollTop = consoleRef.current.scrollHeight
+  }, [logs])
+
+  return (
+    <div className="Console" ref={consoleRef}>
+      <ConsoleFeed variant="dark" logs={logs} />
+    </div>
+  )
+}
+
+function Window({ url, logs }) {
+  const iframeRef = useRef()
+
+  function start() {
+    iframeRef.current.src = `${'http://localhost:9005'}${url}`
+    logs([])
+  }
+
+  function stop() {
+    iframeRef.current.src = ''
+    logs([])
+  }
+
+  function captureLogs() {
+    Hook(iframeRef.current.contentWindow.console,
+      log => logs(logs => [...logs, Decode(log)])
+    )
+  }
+
+  return (
+    <Fragment>
+      <div className="Controls">
+        <div style={{ float: "left" }}>
+          {/* <button onClick={() => saveMethod()}>▶ Run</button> */}
+          <button onClick={() => start()}>▶ Run</button>
+          <button onClick={() => stop()}>◼ Stop</button>
+        </div>
+
+        {/* <label htmlFor="AutoReload" style={{ float: "right", color: "#aaa", cursor: "not-allowed" }}>
+                <input id="AutoReload" type="checkbox" disabled></input>
+                Auto Reload
+              </label> */}
+      </div>
+
+      <iframe className="Window" ref={iframeRef} title="Preview"
+        // TODO: try to capture logs earlier
+        onLoad={captureLogs}
+      />
     </Fragment>
   )
 }

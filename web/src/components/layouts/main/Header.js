@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 
-import MainMenu from '../../components/App/Menus/MainMenu'
-import UserMenu from '../../components/App/Menus/UserMenu'
+import MainMenu from '../../App/Menus/MainMenu'
+import UserMenu from '../../App/Menus/UserMenu'
 
-import { useMetaMask } from "../../components/App/Auth/MetaMask"
+import { useMetaMask } from "../../App/Auth/MetaMask"
 
-import './Header.css'
+import './styles/Header.css'
 
 function Header() {
   const { address } = useMetaMask()

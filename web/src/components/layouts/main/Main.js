@@ -3,9 +3,9 @@ import { useEffect } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
 
-import { useMetaMask } from "../../components/App/Auth/MetaMask"
+import { useMetaMask } from "../../App/Auth/MetaMask"
 
-import './Main.css'
+import './styles/Main.css'
 
 const Main = ({ children }) => {
   const { address } = useMetaMask()

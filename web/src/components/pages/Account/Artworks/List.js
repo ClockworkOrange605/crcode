@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { list } from '../../../api/artworks'
-import Loader from '../../../components/App/Loader/Loader'
-import iconAdd from '../../../assets/icons/add.svg'
-import iconImage from '../../../assets/icons/image.svg'
+import { list } from '../../../../api/artworks'
+import Loader from '../../../App/Loader/Loader'
+import iconAdd from '../../../../assets/icons/add.svg'
+import iconImage from '../../../../assets/icons/image.svg'
 
-import './List.css'
+import './styles/List.css'
 
 function Drafts() {
   const [artworks, setArtworks] = useState([])

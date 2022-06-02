@@ -1,11 +1,12 @@
 import { Fragment, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { list, copy } from "../../../api/templates"
+import { list, copy } from "../../../../api/templates"
 
-import Loader from '../../../components/App/Loader/Loader'
-import './Create.css'
+import Loader from '../../../App/Loader/Loader'
+import './styles/Create.css'
 
 const CreatePage = () => {
+  console.log(process.env)
   const navigate = useNavigate()
 
   const [templates, setTemplates] = useState()

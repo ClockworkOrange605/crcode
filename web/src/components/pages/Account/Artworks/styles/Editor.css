@@ -42,14 +42,29 @@
   transform-origin: top center;
 }
 
-.IDE .Workspace .fileTree.opened {
-  animation: slide 300ms ease-in-out;
-  transform-origin: top center;
+/* .IDE .Workspace .fileTree.opened {
+  overflow-y: visible;
+  overflow-x: hidden;
+} */
+
+.IDE .Workspace .fileTree.opened::-webkit-scrollbar {
+  padding-right: -180px;
+  width: 3px;
+}
+
+.IDE .Workspace .fileTree.opened::-webkit-scrollbar-track {
+  background-color: #111111;
+  border-radius: 100px;
+}
+
+.IDE .Workspace .fileTree.opened::-webkit-scrollbar-thumb {
+  border: 1px solid transparent;
+  border-radius: 100px;
+  background-color: #aaaaaa;
 }
 
 .IDE .Workspace .fileTree.closed {
   width: 20px;
-  /* transition: all 1s; */
 }
 
 .IDE .Workspace .fileTree.closed .item,
@@ -86,6 +101,7 @@
   width: 150px;
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .IDE .Workspace .fileTree .item .icon {

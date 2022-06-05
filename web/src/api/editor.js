@@ -3,6 +3,12 @@ import { authorizedRequest } from "../utils/api"
 const getFiles = async (id) =>
   authorizedRequest(`/editor/${id}/files/`)
 
+const upload = async (id, data, query) =>
+  authorizedRequest(`/editor/${id}/actions/upload/?${query}`, {
+    method: 'POST',
+    body: data
+  })
+
 const create = async (id, data) =>
   authorizedRequest(`/editor/${id}/actions/create/`, {
     method: 'POST',
@@ -24,4 +30,4 @@ const remove = async (id, data) =>
     body: JSON.stringify(data)
   })
 
-export { getFiles, create, rename, remove }
+export { getFiles, upload, create, rename, remove }

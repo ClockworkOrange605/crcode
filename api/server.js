@@ -8,6 +8,7 @@ import EditorRouter from './src/routes/Editor.js'
 const api = express()
 
 api.use(express.json())
+api.use(express.raw({ limit: "25Mb", type: "*/*" }))
 
 api.use('/auth', AuthRouter)
 api.use('/templates', TemplatesRouter)

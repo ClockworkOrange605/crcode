@@ -40,6 +40,12 @@ async function listFolder(root, current = "/") {
   return { files: res, size: total }
 }
 
+const upload = async (root, parent_path, parent_name, name, content) => {
+  const fd = fs.openSync(path.join(root, parent_path, parent_name, name), 'w')
+  fs.writeSync(fd, content)
+  fs.closeSync(fd)
+}
+
 const createFolder = async (root, parent_path, parent_name, name) =>
   fs.mkdirSync(path.join(root, parent_path, parent_name, name))
 
@@ -53,4 +59,4 @@ const rename = async (root, item_path, old_name, new_name) =>
   fs.renameSync(
     path.join(root, item_path, old_name), path.join(root, item_path, new_name))
 
-export { createFile, createFolder, copyFolder, listFolder, rename, remove }
+export { upload, createFile, createFolder, copyFolder, listFolder, rename, remove }

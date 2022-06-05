@@ -1,8 +1,12 @@
 import ReactDOM from 'react-dom'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { create as createItem, rename as renameItem, remove as removeItem }
-  from '../../../../../../api/editor'
+import {
+  upload as uploadItem,
+  create as createItem,
+  rename as renameItem,
+  remove as removeItem
+} from '../../../../../../api/editor'
 
 const ActionsMenu = ({ item, change }) => {
   const { id } = useParams()
@@ -70,6 +74,66 @@ const ActionsMenu = ({ item, change }) => {
     }
   }
 
+  const download = async (event, item) => {
+    const baseUrl = `/preview/${id}/sources`
+
+    if (item.dir) {
+      const rootHandle = await window.showDirectoryPicker()
+      downloadFolderHelper(rootHandle, item)
+    }
+
+    if (!item.dir) {
+      const fileResponse = await fetch(`${baseUrl}${item.path}/${item.name}`)
+      const fileSource = await fileResponse.blob()
+
+      const obj = window.URL.createObjectURL(fileSource)
+      const link = document.createElement('a')
+
+      link.download = item.name
+      link.style.display = 'none'
+      link.href = obj
+
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(obj)
+    }
+  }
+
+  const upload = async (event, item) => {
+    const handle = await window.showOpenFilePicker({ multiple: true })
+
+    await handle.forEach(async (fileHandle) => {
+      const file = await fileHandle.getFile()
+
+      const query = new URLSearchParams({
+        path: item.path, name: item.name === 'root' ? '' : item.name, filename: file.name
+      })
+
+      const { files } = await uploadItem(id, file, query.toString())
+      files && change(files)
+    })
+  }
+
+  const downloadFolderHelper = async (currentHandle, item) => {
+    const baseUrl = `/preview/${id}/sources`
+
+    const dirHandle = await currentHandle.getDirectoryHandle(item.name, { create: true })
+
+    item.files.forEach(async (file) => {
+      if (file.dir) downloadFolderHelper(dirHandle, file)
+      else {
+        const fileHandle = await dirHandle.getFileHandle(file.name, { create: true })
+        const writable = await fileHandle.createWritable()
+
+        const fileResponse = await fetch(`${baseUrl}${file.path}/${file.name}`)
+        const fileSource = await fileResponse.blob()
+
+        await writable.write(fileSource)
+        await writable.close()
+      }
+    })
+  }
+
   return (
     <menu className='actions'>
       {item.dir && (
@@ -87,8 +151,8 @@ const ActionsMenu = ({ item, change }) => {
         </Fragment>
 
       )}
-      <li className="disabled">Download</li>
-      {item.dir && <li className="disabled">Upload</li>}
+      <li onClick={(e) => download(e, item)}>Download</li>
+      {item.dir && <li onClick={(e) => upload(e, item)}>Upload Files</li>}
     </menu>
   )
 }

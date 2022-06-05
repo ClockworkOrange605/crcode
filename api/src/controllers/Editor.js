@@ -1,4 +1,4 @@
-import { listFolder, rename, remove } from '../utils/fs.js'
+import { listFolder, upload, rename, remove } from '../utils/fs.js'
 import { createFile, createFolder } from '../utils/fs.js'
 
 const getFileList = async (req, res) => {
@@ -9,6 +9,20 @@ const getFileList = async (req, res) => {
     const data = await listFolder(path)
 
     res.send(data)
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+const uploadItem = async (req, res) => {
+  const { id } = req.params
+  const { path, name, filename } = req.query
+
+  const root = `/storage/artworks/${id}/sources`
+  try {
+    const file = Buffer.from(req.body)
+    await upload(root, path, name, filename, file)
+    res.send(await listFolder(root))
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
@@ -59,4 +73,4 @@ const removeItem = async (req, res) => {
   }
 }
 
-export { getFileList, createItem, renameItem, removeItem }
+export { getFileList, uploadItem, createItem, renameItem, removeItem }

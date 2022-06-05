@@ -15,26 +15,39 @@ function copyFolder(from, to) {
   })
 }
 
-async function listFolder(path) {
-  const dir = await fs.promises.opendir(path)
-  const res = []
+async function listFolder(root, current = "/") {
+  const dir = await fs.promises.opendir(root)
+  let item, total = 0, res = []
 
-  let item, total = 0
   while (item = dir.readSync()) {
-    const [name, size] = [item.name, fs.statSync(`${path}/${item.name}`).size]
-
-    if (item.isDirectory()) {
-      const { files, size } = await listFolder(`${path}/${item.name}/`)
-      res.push({ name, size, dir: true, files })
-      total += size
-    } else {
-      res.push({ name, size })
-      total += size
+    const filePath = { name: item.name, path: current }
+    const obj = !item.isDirectory() ? {
+      ...filePath, size: fs.statSync(path.join(root, item.name)).size
+    } : {
+      ...filePath, dir: true,
+      ...(await listFolder(path.join(root, item.name), path.join(current, item.name)))
     }
+
+    res.push(obj)
+    total += obj.size
   }
+
+  //set folders firts and sort alphabetically
+  res.sort((el1, el2) => el1.dir === el2.dir ?
+    el1.name.localeCompare(el2.name) : el1.dir ? -1 : 1)
 
   dir.close()
   return { files: res, size: total }
 }
 
-export { copyFolder, listFolder }
+const createFolder = async (currentPath) => fs.mkdirSync(currentPath)
+const createFile = async (currentPath) => fs.closeSync(fs.openSync(currentPath, 'w'))
+
+const remove = async (root, filepath, name) =>
+  fs.rmSync(path.join(root, filepath, name), { recursive: true })
+
+const rename = async (root, item_path, old_name, new_name) =>
+  fs.renameSync(
+    path.join(root, item_path, old_name), path.join(root, item_path, new_name))
+
+export { createFile, createFolder, copyFolder, listFolder, rename, remove }

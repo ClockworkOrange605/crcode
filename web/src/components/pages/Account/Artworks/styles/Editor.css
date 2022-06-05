@@ -25,43 +25,163 @@
 
 .IDE .Workspace {
   grid-area: workspace;
+  display: flex;
+  position: relative;
 }
 
 .IDE .Workspace .fileTree {
+  position: absolute;
+  width: 200px;
+  height: 100%;
   margin-bottom: -4px;
+  background: #333;
+  border-left: 1px solid #555;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  z-index: 98;
+  transform-origin: top center;
 }
 
-.IDE .Workspace .fileTree p {
-  width: 75px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: inline-block;
-  cursor: pointer;
-  padding: 0 10px;
+.IDE .Workspace .fileTree.opened {
+  animation: slide 300ms ease-in-out;
+  transform-origin: top center;
+}
+
+.IDE .Workspace .fileTree.closed {
+  width: 20px;
+  /* transition: all 1s; */
+}
+
+.IDE .Workspace .fileTree.closed .item,
+.IDE .Workspace .fileTree.closed .collapsable {
+  visibility: collapse;
+}
+
+.IDE .Workspace .fileTree.closed .item .icon.collapse {
+  visibility: visible;
+  position: absolute;
+  left: 2px;
+}
+
+.IDE .Workspace .fileTree .item {
+  display: flex;
+  justify-content: flex-start;
+  width: 190px;
+  padding: 0 5px;
   margin: 0;
-  border: 1px solid #333;
-  background-color: #333;
-  border-bottom: none;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 
-.IDE .Workspace .fileTree p:hover {
-  border-color: #444;
+.IDE .Workspace .fileTree .item.root {
+  border-bottom: 1px solid #555;
+  padding: 5px;
+}
+
+.IDE .Workspace .fileTree .item:not(.disabled):hover {
+  cursor: pointer;
   background-color: #444;
   color: #aaaaaa;
 }
 
-.IDE .Workspace .fileTree p.selected {
+.IDE .Workspace .fileTree .item .label {
+  width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.IDE .Workspace .fileTree .item .icon {
+  width: 19px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer;
+}
+
+.IDE .Workspace .fileTree.opened .item .icon.collapse::before {
+  content: url('../../../../../assets/icons/left.svg');
+}
+
+.IDE .Workspace .fileTree.closed .item .icon.collapse::before {
+  content: url('../../../../../assets/icons/right.svg');
+}
+
+.IDE .Workspace .fileTree .item .icon.folder:before {
+  content: url('../../../../../assets/icons/folder.svg');
+}
+
+.IDE .Workspace .fileTree .item .icon.file:before {
+  content: url('../../../../../assets/icons/file.svg');
+}
+
+.IDE .Workspace .fileTree .item .icon.options::before {
+  content: url('../../../../../assets/icons/dots.svg');
+}
+
+.IDE .Workspace .fileTree .item:hover .icon.folder,
+.IDE .Workspace .fileTree .item:hover .icon.file,
+.IDE .Workspace .fileTree .item .icon.collapse:hover,
+.IDE .Workspace .fileTree .item .icon.options:hover {
+  filter: invert(1);
+}
+
+.IDE .Workspace .fileTree .item .icon.options .actions {
+  visibility: hidden;
+  background: #ddd;
+  width: 180px;
+  padding: 10px;
+  margin: 0;
+  cursor: default;
+  color: black;
+}
+
+.IDE .Workspace .fileTree .item .icon.options:hover .actions {
+  visibility: visible;
+}
+
+.IDE .Workspace .fileTree .item .icon.options .actions>li {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-style: normal;
+  list-style: none;
+  cursor: pointer;
+}
+
+.IDE .Workspace .fileTree .item .icon.options .actions>li.disabled {
+  color: #999;
+  cursor: default;
+}
+
+.IDE .Workspace .fileTree .item .icon.options .actions>li:not(.disabled):hover {
+  color: #333;
+}
+
+.IDE .Workspace .fileTree .item .icon.options:hover .actions hr {
+  margin: 7px 0 0 0;
+}
+
+.IDE .Workspace .fileTree .collapsable {
+  border-left: 1px solid #555;
+  margin-left: 20px;
+}
+
+.IDE .Workspace .fileTree .collapsable .item {
+  width: 169px;
+}
+
+.IDE .Workspace .fileTree .collapsable .item .label {
+  width: 130px;
+}
+
+/* .IDE .Workspace .fileTree p.selected {
   border-color: #555;
   background-color: #555;
   color: #aaaaaa;
   cursor: default;
-}
+} */
 
 .IDE .Workspace .EditorInstance {
-  min-width: 100px;
-  height: 400px;
+  min-width: 550px;
+  height: 422px;
+  margin-left: 20px;
 }
 
 .IDE .Preview {

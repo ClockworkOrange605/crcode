@@ -7,7 +7,7 @@ import { useAuth } from "../App/Auth/Auth"
 
 import Artworks from '../pages/Account/Artworks/List'
 import Templates from "../pages/Account/Artworks/Create"
-import IDE from "../pages/Account/Artworks/Editor"
+import IDE from "../pages/Account/Artworks/IDE/IDE"
 import Metadata from "../pages/Account/Artworks/Update"
 import Mint from '../pages/Account/Artworks/Publish'
 

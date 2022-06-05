@@ -48,7 +48,7 @@ function FileList({ root, data, depth, change }) {
             <div
               key={`dir${item.path}${item.name}`}
               className={`collapsable depth-${index}`}>
-              <FileList root={root} data={item.files} change={change} depth={index} />
+              <FileList root={root} data={item.files} depth={index} change={change} />
             </div>
           )}
         </Fragment>
@@ -62,6 +62,7 @@ function FileList({ root, data, depth, change }) {
           <i className="icon options">
             <ActionsMenu
               item={{ name: 'root', path: '/', dir: true, files: data }}
+              change={change}
             ></ActionsMenu>
           </i>
         </div>

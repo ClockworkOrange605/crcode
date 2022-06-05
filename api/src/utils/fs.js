@@ -40,11 +40,14 @@ async function listFolder(root, current = "/") {
   return { files: res, size: total }
 }
 
-const createFolder = async (currentPath) => fs.mkdirSync(currentPath)
-const createFile = async (currentPath) => fs.closeSync(fs.openSync(currentPath, 'w'))
+const createFolder = async (root, parent_path, parent_name, name) =>
+  fs.mkdirSync(path.join(root, parent_path, parent_name, name))
 
-const remove = async (root, filepath, name) =>
-  fs.rmSync(path.join(root, filepath, name), { recursive: true })
+const createFile = async (root, parent_path, parent_name, name) =>
+  fs.closeSync(fs.openSync(path.join(root, parent_path, parent_name, name), 'w'))
+
+const remove = async (root, item_path, name) =>
+  fs.rmSync(path.join(root, item_path, name), { recursive: true })
 
 const rename = async (root, item_path, old_name, new_name) =>
   fs.renameSync(

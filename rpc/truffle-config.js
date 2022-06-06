@@ -1,3 +1,7 @@
+const fs = require('fs')
+
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -18,10 +22,8 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const mnemonic = fs.readFileSync(".secret").toString().trim()
+// provider: () => new HDWalletProvider(mnemonic, "http://rpc_url"),
 
 module.exports = {
   /**
@@ -81,9 +83,8 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.9",       // Fetch exact version from solc-bin (default: truffle's version)
-      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      settings: {          // See the solidity docs for advice about optimization and evmVersion
+      version: "0.8.14",
+      settings: {
         optimizer: {
           enabled: false,
           runs: 200

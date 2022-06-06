@@ -1,5 +1,13 @@
 {
+  "scripts": {
+    "build": "npx truffle build",
+    "deploy": "npx truffle deploy",
+    "compile": "npx truffle compile",
+    "migrate": "npx truffle migrate"
+  },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0",
+    "@truffle/hdwallet-provider": "^2.0.8",
     "truffle": "^5.5.15"
   }
 }

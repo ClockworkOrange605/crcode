@@ -3,6 +3,6 @@
         "ms-azuretools.vscode-docker",
         "msjsdiag.vscode-react-native",
         "mongodb.mongodb-vscode",
-        "juanblanco.solidity",
+        "trufflesuite-csi.truffle-vscode"
     ]
 }

@@ -16,6 +16,12 @@ const create = async (id, data) =>
     body: JSON.stringify(data)
   })
 
+const save = async (id, data, query) =>
+  authorizedRequest(`/editor/${id}/actions/save/?${query}`, {
+    method: 'POST',
+    body: data
+  })
+
 const rename = async (id, data) =>
   authorizedRequest(`/editor/${id}/actions/rename/`, {
     method: 'POST',
@@ -30,4 +36,4 @@ const remove = async (id, data) =>
     body: JSON.stringify(data)
   })
 
-export { getFiles, upload, create, rename, remove }
+export { getFiles, upload, create, save, rename, remove }

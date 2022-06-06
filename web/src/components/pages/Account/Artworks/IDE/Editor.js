@@ -1,10 +1,9 @@
 import { useRef, useState, useEffect } from 'react'
-
+import { save as saveFile } from '../../../../../api/editor'
 import * as monaco from 'monaco-editor'
 
 function Editor({ id, file }) {
   const editorRef = useRef()
-
   const [editor, setEditor] = useState(null)
 
   useEffect(() => {
@@ -30,33 +29,32 @@ function Editor({ id, file }) {
         fetch(filepath)
           .then(async (res) => {
             const source = await res.text()
-            editor.setValue(source)
 
-            // const language = res.headers.get('Content-type').split(';')[0].split('/')[1]
+            editor.setValue(source)
+            // const language =
+            // res.headers.get('Content-type').split(';')[0].split('/')[1]
             // monaco.editor.setModelLanguage(editor.getModel(), language)
           })
       }
     }
   }, [id, file, editor])
 
-  // function save() {
-  //   const content = editor.getValue()
-  //   console.log(fileName, content)
-  //   fetch(`/${account}/nft/${draftId}/files/${fileName}/save`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-type': 'text/plain',
-  //       'x-auth-token': sessionStorage.getItem(account)
-  //     },
-  //     body: content
-  //   }).then(async (res) => {
-  //     await res.json()
-  //     reloadFrame()
-  //   })
-  // }
+  const ctrlSEventListener = async (event) => {
+    if (event.ctrlKey && event.key === 's') {
+      event.preventDefault()
+      await save()
+    }
+  }
+
+  async function save() {
+    const content = editor.getValue()
+    const query = new URLSearchParams({ file: file })
+
+    await saveFile(id, content, query.toString())
+  }
 
   return (
-    <div ref={editorRef} className="EditorInstance" />
+    <div ref={editorRef} className="EditorInstance" onKeyDown={ctrlSEventListener} />
   )
 }
 

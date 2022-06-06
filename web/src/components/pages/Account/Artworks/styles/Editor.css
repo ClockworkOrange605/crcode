@@ -131,7 +131,6 @@
   content: url('../../../../../assets/icons/dots.svg');
 }
 
-.IDE .Workspace .fileTree .item:hover .icon.folder,
 .IDE .Workspace .fileTree .item:hover .icon.file,
 .IDE .Workspace .fileTree .item .icon.collapse:hover,
 .IDE .Workspace .fileTree .item .icon.options:hover {

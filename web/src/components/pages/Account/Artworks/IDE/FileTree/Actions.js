@@ -27,7 +27,7 @@ const ActionsMenu = ({ item, change }) => {
       item.name === 'root' && (item.name = '')
 
       const { files } = await createItem(id, { dir, parent: item, name: value })
-      change(files)
+      files && change(files)
       close()
     }
 
@@ -58,7 +58,7 @@ const ActionsMenu = ({ item, change }) => {
       event.preventDefault()
       item.dir && delete item.files && delete item.size
       const { files } = await renameItem(id, { item, name: value })
-      change(files)
+      files && change(files)
       close()
     }
 
@@ -70,7 +70,7 @@ const ActionsMenu = ({ item, change }) => {
     if (window.confirm(`Remove ${item.name}`)) {
       item.dir && delete item.files && delete item.size
       const { files } = await removeItem(id, { item })
-      change(files)
+      files && change(files)
     }
   }
 

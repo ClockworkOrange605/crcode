@@ -21,6 +21,7 @@ function IDE() {
   // const [artwork, setArtwork] = useState({})
   const [template, setTemplate] = useState()
   const [files, setFiles] = useState([])
+  const [openedFile, openFile] = useState()
 
   const [logs, setLogs] = useState([])
   const [loadingMessage, setLoading] = useState(null)
@@ -35,6 +36,7 @@ function IDE() {
 
       // setArtwork(artwork)
       setTemplate(template)
+      openFile(template.sources.main)
       setFiles(files)
 
       setLoading(null)
@@ -60,9 +62,8 @@ function IDE() {
         <div className="IDE">
           <div className="Workspace">
             {/* TODO: check better way to pass setFiles */}
-            <FileTree data={files} change={setFiles} />
-            <Editor id={id}
-              file={template?.sources?.main} />
+            <FileTree data={files} change={setFiles} open={openFile} />
+            <Editor id={id} file={openedFile} />
           </div>
 
           <div className="Preview">

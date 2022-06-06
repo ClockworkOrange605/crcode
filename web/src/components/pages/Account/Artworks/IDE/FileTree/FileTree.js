@@ -1,23 +1,36 @@
 import { Fragment, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 
 import ActionsMenu from './Actions'
 
-function FileTree({ data, change }) {
+function FileTree({ data, change, open }) {
   const rootRef = useRef()
 
   return (
     <div className="fileTree closed" ref={rootRef}>
-      <FileList root={rootRef} data={data} change={change} index={0} />
+      <FileList root={rootRef} data={data} change={change} open={open} index={0} />
     </div>
   )
 }
 
-function FileList({ root, data, depth, change }) {
+function FileList({ root, data, depth, change, open }) {
+  const { id } = useParams()
 
   //TODO: redesign with :hover
   const toggleMenu = () => {
     root.current.classList.toggle('opened')
     root.current.classList.toggle('closed')
+  }
+
+  const openItem = (event, item) => {
+    if (!item.dir) {
+      const url = `/preview/${id}/sources${item.path}/${item.name}`
+
+      console.log(url, item)
+
+      open(`${item.path}/${item.name}`)
+      toggleMenu()
+    }
   }
 
   return (
@@ -33,12 +46,13 @@ function FileList({ root, data, depth, change }) {
       {data && data.map((item, index) => (
         <Fragment>
           <div key={`${item.path}${item.name}`}
-            className={`item ${item.dir ? 'folder' : 'file'}`}
-          // ${item.name === file ? 'selected' : ''}
-          // onClick={() => setFile(item.name)}
+            className={`item ${item.dir ? 'folder disabled' : 'file'}`}
           >
             <i className={`icon ${item.dir ? 'folder' : 'file'}`}></i>
-            <div className='label'>{item.name}</div>
+
+            <div className='label'
+              onClick={e => openItem(e, item)}>{item.name}</div>
+
             <i className="icon options">
               <ActionsMenu item={item} change={change}></ActionsMenu>
             </i>
@@ -47,8 +61,8 @@ function FileList({ root, data, depth, change }) {
           {item.dir && (
             <div
               key={`dir${item.path}${item.name}`}
-              className={`collapsable depth-${index}`}>
-              <FileList root={root} data={item.files} depth={index} change={change} />
+              className={`collapsable depth - ${index}`}>
+              <FileList root={root} data={item.files} depth={index} change={change} open={open} />
             </div>
           )}
         </Fragment>

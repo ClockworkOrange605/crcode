@@ -12,7 +12,8 @@
     "mongodb": "^4.6.0",
     "node-fetch": "^3.2.4",
     "puppeteer": "^14.1.2",
-    "puppeteer-screen-recorder": "^2.0.2"
+    "puppeteer-screen-recorder": "^2.0.2",
+    "web3": "^1.7.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"

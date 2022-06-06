@@ -20,6 +20,8 @@ services:
       MONGO_URI: mongodb://mongo:27017
       EVM_RPC: http://rpc:9545
 
+      CONTRACT_ADDRESS: ${CONTRACT_ADDRESS}
+
       INFURA_IPFS_ID: ${INFURA_IPFS_ID}
       INFURA_IPFS_SECRET: ${INFURA_IPFS_SECRET}
       NFT_STORAGE_KEY: ${NFT_STORAGE_KEY}

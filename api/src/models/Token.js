@@ -1,5 +1,4 @@
 import { db } from '../mongo.js'
-import { ObjectId } from 'mongodb'
 
 const dbCollection = db.collection('token')
 
@@ -16,10 +15,10 @@ const find = async (filter) =>
   dbCollection.find(filter).toArray()
 
 const findById = async (id, options = {}) =>
-  dbCollection.findOne(ObjectId(id), options)
+  dbCollection.findOne({ id: parseInt(id) }, options)
 
 const updateById = async (id, data) =>
-  dbCollection.findOneAndUpdate({ _id: ObjectId(id) }, { $set: { ...data } })
+  dbCollection.findOneAndUpdate({ id: parseInt(id) }, { $set: { ...data } })
 
 
 export { create, updateOne, updateMany, updateById, find, findById }

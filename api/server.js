@@ -5,6 +5,7 @@ import TemplatesRouter from './src/routes/Templates.js'
 import ArtworksRouter from './src/routes/Artworks.js'
 import EditorRouter from './src/routes/Editor.js'
 import ContractRouter from './src/routes/Contract.js'
+import CollectionRouer from './src/routes/Tokens.js'
 
 const api = express()
 
@@ -16,6 +17,7 @@ api.use('/templates', TemplatesRouter)
 api.use('/artworks', ArtworksRouter)
 api.use('/editor', EditorRouter)
 api.use('/contract', ContractRouter)
+api.use('/collection', CollectionRouer)
 
 //TODO: add auth middlware (Make sure preview page keep working)
 api.use('/preview', express.static('/storage/artworks'))

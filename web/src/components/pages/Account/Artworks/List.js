@@ -54,7 +54,7 @@ const ArtworksList = ({ data }) => {
       case 'ready':
         return `/account/artworks/${item._id}/publish`
       case 'minted':
-        return `#`
+        return `/collection/${item.token_id}/`
       default:
         return `/account/artworks/${item._id}/editor/`
     }

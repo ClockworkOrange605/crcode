@@ -1,11 +1,9 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
+import { useParams, useNavigate } from 'react-router'
 
-import { useParams/*, useNavigate */ } from 'react-router'
-// import { Link } from 'react-router-dom'
-
-// import { useMetaMask } from '../../../components/App/Auth/MetaMask'
-
+import { useMetaMask } from '../../../App/Auth/MetaMask'
 import { get as getArtwork } from '../../../../api/artworks'
+import { getMintTx, setMintTxHash } from '../../../../api/contract'
 
 import Loader from '../../../App/Loader/Loader'
 
@@ -14,13 +12,12 @@ import * as monaco from 'monaco-editor'
 import './styles/Publish.css'
 
 function Publish() {
-  // const navigate = useNavigate()
+  const { ethereum } = useMetaMask()
+  const navigate = useNavigate()
 
   const codeRef = useRef()
 
-  // const { address, ethereum } = useMetaMask()
   const { id } = useParams()
-
   const [data, setData] = useState()
   const [metadata, setMetadata] = useState()
   const [code, setCode] = useState()
@@ -51,50 +48,14 @@ function Publish() {
     load()
   }, [id])
 
-  //   async function publish() {
-  //     //TODO: add env variables
-  //     const chain = '0x539'
+  // TODO: add chain validation
+  async function publish() {
+    const { tx } = await getMintTx(id)
+    const txHash = await ethereum.request({ method: 'eth_sendTransaction', params: [tx] })
 
-  //     //TODO: make account check
-  //     if (address !== account) {
-  //       return alert('wrong metamask account selected')
-  //     }
-
-  //     //TODO: make notification for wrong chain
-  //     if (chainId !== chain) {
-  //       return alert('wrong chain selected')
-  //     }
-
-  //     fetch(`/${account}/nft/${id}/mint`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-type": "application/json",
-  //         'x-auth-token': sessionStorage.getItem(account)
-  //       },
-  //       body: JSON.stringify({ metadata: data.metadata_url })
-  //     })
-  //       .then(res => {
-  //         console.log(res)
-  //         res.json()
-  //           .then(({ tx }) => {
-  //             console.log(tx)
-
-  //             ethereum.request({
-  //               method: 'eth_sendTransaction',
-  //               params: [tx],
-  //             })
-  //               .then(txId => {
-  //                 fetch(`/collection/${txId}/status`)
-  //                   .then(res =>
-  //                     res.json()
-  //                       .then(data => {
-  //                          navigate(`/collection/${data.id}`)
-  //                       })
-  //                   )
-  //               })
-  //           })
-  //       })
-  //   }
+    const { tx: transaction, token } = await setMintTxHash(id, txHash)
+    transaction.status && navigate(`/collection/${token.id}`)
+  }
 
   return (
     <Fragment>
@@ -102,16 +63,14 @@ function Publish() {
 
       {!loading && (
         <div className="Publisher">
-          {/* <div className="Header">
-            <h1>Review Metadata and Publish</h1>
-            <Link to={`/account/artworks/${id}/metadata`}>⬅ Go Back</Link>
-          </div> */}
+          {/* <div className="Header"><h1>Review Metadata and Publish</h1></div> */}
 
           <div className="Metadata">
             <h2>
               Metadata&nbsp;
-              <a href={data?.metadata_url} target="_blank" rel="noreferrer">
-                {data?.metadata_hash}
+              <a target="_blank" rel="noreferrer"
+                href={data?.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/')}
+              >{data?.metadata_hash}
               </a>
             </h2>
             <code ref={codeRef} dangerouslySetInnerHTML={{ __html: code }}></code>
@@ -140,9 +99,7 @@ function Publish() {
           </div>
 
           <div className="Actions">
-            <button
-            // onClick={publish}
-            >Publish</button>
+            <button onClick={publish}>Publish</button>
           </div>
         </div>
       )}

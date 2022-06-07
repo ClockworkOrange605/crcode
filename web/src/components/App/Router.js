@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-
 import { Routes, Route } from "react-router-dom"
 
 import { useMetaMask } from "../App/Auth/MetaMask"
@@ -12,8 +11,6 @@ import Metadata from "../pages/Account/Artworks/Update"
 import Mint from '../pages/Account/Artworks/Publish'
 
 const Router = () => {
-  // setInterval(() => { console.log(Date.now()) }, 5000)
-
   return (
     <Routes>
       <Route
@@ -44,6 +41,10 @@ const Router = () => {
 
       <Route
         path="/account/collection"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+      <Route
+        path="/account/collection/:id"
         element={<RequireAuth>Under the Development</RequireAuth>}
       />
 

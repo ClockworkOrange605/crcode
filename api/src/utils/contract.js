@@ -3,17 +3,30 @@ import { config, web3, contract } from '../rpc.js'
 const getMintTx = async (address, metadata) => {
   const method = await contract.methods.mint(address, metadata)
 
-  // TODO: estimate normal gas price
-  // const gasPrice = '20000000000'
-
   return {
     from: address,
     to: config.address,
-    gas: web3.utils.toHex((await method.estimateGas()).toString()),
-    // gasPrice: web3.utils.toHex(gasPrice),
-    value: web3.utils.toHex(config.mint_price),
+    gas: (await method.estimateGas()).toString(),
     data: await method.encodeABI()
+    //TODO: make mint method payable
+    // value: web3.utils.toHex(config.mint_price),
   }
 }
 
-export { getMintTx }
+const getMintTxData = async (hash) => {
+  const tx = await web3.eth.getTransactionReceipt(hash)
+
+  if (tx?.status) {
+    const id = web3.utils.hexToNumber(tx.logs[0].topics[3])
+    const token = {
+      id,
+      owner: await contract.methods.ownerOf(id).call(),
+      uri: await contract.methods.tokenURI(id).call()
+    }
+    return { tx, token }
+  }
+
+  return { tx, token: {} }
+}
+
+export { getMintTx, getMintTxData }

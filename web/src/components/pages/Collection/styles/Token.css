@@ -1,0 +1,251 @@
+.Token {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 15px;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.Token .Info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-right: 1px dotted whitesmoke;
+}
+
+.Token .Info picture {
+  display: flex;
+  /* border: thick double var(--primary-account-color); */
+  margin: 20px 0 10px;
+}
+
+.Token .Info picture img {
+  max-height: 300px;
+  max-width: 300px;
+}
+
+.Token .Info .Links {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.Token .Info .Links .icon {
+  padding: 3px;
+}
+
+.Token .Info .Links .icon::before {
+  content: "";
+  display: inline-block;
+  background-size: contain;
+  width: 22px;
+  height: 22px;
+}
+
+.Token .Info .Links .icon.polygonscan::before {
+  background-image: url('../../../../assets/icons/favicons/polygonscan.ico');
+}
+
+.Token .Info .Links .icon.ipfs::before {
+  background-image: url('../../../../assets/icons/favicons/ipfs.ico');
+}
+
+.Token .Info .Links .icon.opensea::before {
+  background-image: url('../../../../assets/icons/favicons/opensea.png');
+}
+
+.Token .Info .Links .icon.rarible::before {
+  background-image: url('../../../../assets/icons/favicons/rarible.png');
+}
+
+.Token .Info .Addresses {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.Token .Info .Addresses .split {
+  display: flex;
+  justify-content: space-around;
+}
+
+.Token .Info .Attributes {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.Token .Info .Attributes .Attribute {
+  border: 1px solid var(--primary-account-color);
+  border-radius: 20px;
+  width: 115px;
+  height: 115px;
+  padding: 5px;
+}
+
+.Token .Info .Attributes .Attribute:hover {
+  border: 1px solid var(--secondary-account-color);
+  color: grey;
+}
+
+.Token .Info .Attributes .trait {
+  font-weight: 800;
+  text-transform: capitalize;
+  border-bottom: 1px solid white;
+  padding: 5px 10px;
+  margin: 0 5px;
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 85px;
+}
+
+.Token .Info .Attributes .value {
+  text-align: center;
+  padding: 25px 0;
+}
+
+.Token .Details {}
+
+.Token .Details .Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Token .Details .Header .BidButton {
+  background: none;
+  border: 2px solid var(--primary-account-color);
+  border-radius: 15px;
+  padding: 15px;
+  color: white;
+  font-size: large;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.Token .Details .Header .BidButton:hover {
+  border-color: var(--secondary-account-color);
+  color: #aaaaaa;
+}
+
+.Token .Details .Description {
+  height: 100px;
+  margin: 10px 0;
+}
+
+.Token .Details .Description p {
+  height: 90px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Token .Details .Tabs {}
+
+.Token .Details .Tabs .TabLinks {}
+
+.Token .Details .Tabs .TabLinks>a {
+  border: 1px solid var(--primary-account-color);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 0 10px;
+  margin: 5px 0;
+}
+
+.Token .Details .Tabs .TabLinks>a:hover,
+.Token .Details .Tabs .TabLinks>a.selected {
+  border-color: var(--secondary-account-color);
+  /* cursor: default; */
+  color: #aaaaaa;
+}
+
+.Token .Details .Tabs .TabLinks>a.selected {
+  cursor: default;
+}
+
+.Token .Details .Tabs .TabContents {
+  border: 1px solid var(--primary-account-color);
+  width: 630px;
+  position: relative;
+}
+
+.Token .Details .Tabs .TabContents>div {
+  display: none;
+}
+
+.Token .Details .Tabs .TabContents>div iframe {
+  border: none;
+}
+
+.Token .Details .Tabs .TabContents>div.fullscreen iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  z-index: 99999;
+}
+
+.Token .Details .Tabs .TabContents>div.selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 550px; */
+  height: 365px;
+  margin: auto;
+}
+
+.Token .Details .Tabs .TabContents>div .Actions {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: flex-end;
+  gap: 10px;
+  right: 30px;
+  top: 30px;
+}
+
+.Token .Details .Tabs .TabContents>div.fullscreen .Actions {
+  position: fixed;
+  z-index: 999999;
+}
+
+.Token .Details .Tabs .TabContents>div .Actions .icon {
+  content: "";
+  display: inline-block;
+  background-size: contain;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.Token .Details .Tabs .TabContents>div .Actions .icon:hover {
+  filter: invert(1);
+}
+
+.Token .Details .Tabs .TabContents>div .Actions .icon.fullscreen {
+  background-image: url('../../../../assets/icons/fullscreen.svg');
+}
+
+.Token .Details .Tabs .TabContents>div .Actions .icon.download {
+  background-image: url('../../../../assets/icons/download.svg');
+}
+
+.Token .Details .Events {
+  margin: 20px 0;
+}

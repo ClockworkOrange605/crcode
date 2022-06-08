@@ -10,12 +10,23 @@ import IDE from "../pages/Account/Artworks/IDE/IDE"
 import Metadata from "../pages/Account/Artworks/Update"
 import Mint from '../pages/Account/Artworks/Publish'
 
+import Token from "../pages/Collection/Token"
+
 const Router = () => {
   return (
     <Routes>
       <Route
         path="/account"
         element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+
+      <Route
+        path="/collection"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
+      <Route
+        path="/collection/:id"
+        element={<Token />}
       />
 
       <Route
@@ -37,15 +48,6 @@ const Router = () => {
       <Route
         path="/account/artworks/:id/publish"
         element={<RequireAuth><Mint /></RequireAuth>}
-      />
-
-      <Route
-        path="/account/collection"
-        element={<RequireAuth>Under the Development</RequireAuth>}
-      />
-      <Route
-        path="/account/collection/:id"
-        element={<RequireAuth>Under the Development</RequireAuth>}
       />
 
       <Route

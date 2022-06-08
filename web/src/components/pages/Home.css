@@ -1,0 +1,28 @@
+.Home {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+}
+
+.Home .Block {
+  border-radius: 25px;
+  padding: 15px 20px 40px;
+}
+
+.Home .Block .Tokens {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.Home .Block .Tokens .Item {
+  border: 1px solid var(--secondary-account-color);
+  border-radius: 25px;
+  width: 250px;
+  padding: 20px 20px 5px;
+}
+
+.Home .Block .Tokens .Item:hover {
+  border-color: var(--primary-account-color);
+  cursor: pointer;
+}

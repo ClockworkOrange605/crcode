@@ -4,29 +4,37 @@ import { Routes, Route } from "react-router-dom"
 import { useMetaMask } from "../App/Auth/MetaMask"
 import { useAuth } from "../App/Auth/Auth"
 
+import Home from "../pages/Home"
+
+import Collection from "../pages/Collection/Collection"
+import Token from "../pages/Collection/Token"
+
 import Artworks from '../pages/Account/Artworks/List'
 import Templates from "../pages/Account/Artworks/Create"
 import IDE from "../pages/Account/Artworks/IDE/IDE"
 import Metadata from "../pages/Account/Artworks/Update"
 import Mint from '../pages/Account/Artworks/Publish'
 
-import Token from "../pages/Collection/Token"
-
 const Router = () => {
   return (
     <Routes>
       <Route
-        path="/account"
-        element={<RequireAuth>Under the Development</RequireAuth>}
+        exact path="/"
+        element={<Home />}
       />
 
       <Route
         path="/collection"
-        element={<RequireAuth>Under the Development</RequireAuth>}
+        element={<Collection />}
       />
       <Route
         path="/collection/:id"
         element={<Token />}
+      />
+
+      <Route
+        path="/account"
+        element={<RequireAuth>Under the Development</RequireAuth>}
       />
 
       <Route

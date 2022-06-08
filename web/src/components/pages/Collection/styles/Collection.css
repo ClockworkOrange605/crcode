@@ -1,0 +1,32 @@
+.Collection {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 15px;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+.Collection .Filter {
+  border-right: 1px dotted whitesmoke;
+}
+
+.Collection .List {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px 0;
+}
+
+.Collection .List .Item {
+  border: 1px solid var(--primary-account-color);
+  border-radius: 25px;
+  width: 250px;
+  padding: 20px 20px 5px;
+}
+
+.Collection .List .Item:hover {
+  border-color: var(--secondary-account-color);
+  cursor: pointer;
+}

@@ -42,6 +42,17 @@ const Token = () => {
     }
   }, [location, loading])
 
+  const smoothScroll = async (event) => {
+    event.preventDefault()
+    const target = event.target.attributes.href.value
+    document.location.hash = target
+
+    // const block = document.querySelector('.TabContents')
+    // block.scrollIntoView(
+    //   { behavior: "smooth", block: "end", inline: "end" })
+
+  }
+
   const toggleFullscreen = () =>
     document.querySelector('#Artwork').classList.toggle('fullscreen')
 
@@ -135,9 +146,9 @@ const Token = () => {
 
             <div className="Tabs">
               <div className="TabLinks">
-                <a href="#Preview" className="selected">Preview</a>
-                <a href="#Artwork">Artwork</a>
-                <a href="#Sources">Sources</a>
+                <a href="#Preview" className="selected" onClick={smoothScroll}>Preview</a>
+                <a href="#Artwork" onClick={smoothScroll}>Artwork</a>
+                <a href="#Sources" onClick={smoothScroll}>Sources</a>
               </div>
               <div className="TabContents">
                 <div id="Preview" className="selected">
@@ -238,9 +249,6 @@ const TokenEvents = ({ events }) => {
 
     eventsClone.forEach(event => {
       event.type = (event.returnValues.from === "0x0000000000000000000000000000000000000000") ? 'Minted' : 'Transfered'
-
-      eventsClone.push({ ...event, type: 'Transfered' })
-      console.log(eventsClone)
     })
     setData(eventsClone)
   }, [events])

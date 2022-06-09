@@ -1,6 +1,9 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+// TODO: change method
+import { list as getLatest } from '../../api/tokens'
+
 import Loader from '../App/Loader/Loader'
 
 import './Home.css'
@@ -11,6 +14,9 @@ function Home() {
 
   useEffect(() => {
     const load = async () => {
+      const tokens = await getLatest()
+      setTokens(tokens)
+
       setLoading(false)
     }
 
@@ -28,23 +34,12 @@ function Home() {
 
             <div className="Tokens">
               {tokens.map(token => (
-                <Link to={`/collection/${token.id}`}>
+                <Link to={`/collection/${token.id}`} key={token._id}>
                   <div className="Item">
-                    <img width="250" src={token?.metadata?.image} alt="" />
-                    <p style={{ "line-height": "28px", "padding-bottom": "20px" }}>
-                      #{token.id} {token?.metadata?.name}
-
-                      <span style={{ color: '#888888', float: 'left' }}>
-                        0x
-                        <span style={{ 'color': `#${token.owner.slice(2, 8)}` }}>
-                          {token.owner.slice(2, 8)}
-                        </span>
-                        . . .
-                        <span style={{ 'color': `#${token.owner.slice(-6)}` }}>
-                          {token.owner.slice(-6)}
-                        </span>
-                      </span>
-                    </p>
+                    <img width="250" alt={token?.metadata?.name}
+                      src={token?.metadata?.image
+                        .replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+                    <p>#{token.id} {token?.metadata?.name}</p>
                   </div>
                 </Link>
               ))}

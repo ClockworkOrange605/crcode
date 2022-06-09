@@ -10,13 +10,42 @@
   border-right: 1px dotted whitesmoke;
 }
 
+.Collection .Filter h2 {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.Collection .Filter .Group {
+  border-bottom: 1px dashed;
+  padding-bottom: 20px;
+  margin: 20px;
+}
+
+.Collection .Filter .Group:last-child {
+  border: none;
+}
+
+.Collection .Filter .Group .Item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Collection .Filter .Group .Item label {
+  font-size: 20px;
+}
+
+.Collection .Filter .Group .Item input[type="text"],
+.Collection .Filter .Group .Item select {
+  min-width: 180px;
+}
+
 .Collection .List {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px 0;
+  gap: 30px;
+  padding: 20px 10px;
 }
 
 .Collection .List .Item {
@@ -29,4 +58,9 @@
 .Collection .List .Item:hover {
   border-color: var(--secondary-account-color);
   cursor: pointer;
+}
+
+.Collection .List .Item p {
+  line-height: 28px;
+  padding-bottom: 20px;
 }

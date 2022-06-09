@@ -26,3 +26,8 @@
   border-color: var(--primary-account-color);
   cursor: pointer;
 }
+
+.Home .Block .Tokens .Item p {
+  line-height: 28px;
+  padding-bottom: 20px;
+}

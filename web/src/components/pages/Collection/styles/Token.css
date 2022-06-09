@@ -1,7 +1,7 @@
 .Token {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  grid-gap: 15px;
+  /* grid-gap: 15px; */
   min-height: 100%;
   min-width: 100%;
 }
@@ -72,11 +72,10 @@
 
 .Token .Info .Attributes {
   display: flex;
-  justify-content: space-evenly;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 20px;
   flex-wrap: wrap;
-  margin: 10px 0;
-  width: 100%;
+  margin: 10px 20px;
   cursor: pointer;
 }
 
@@ -111,7 +110,9 @@
   padding: 25px 0;
 }
 
-.Token .Details {}
+.Token .Details {
+  padding: 0 15px;
+}
 
 .Token .Details .Header {
   display: flex;
@@ -119,7 +120,7 @@
   align-items: center;
 }
 
-.Token .Details .Header .BidButton {
+.Token .Details .Header button {
   background: none;
   border: 2px solid var(--primary-account-color);
   border-radius: 15px;
@@ -131,33 +132,56 @@
   margin-right: 15px;
 }
 
-.Token .Details .Header .BidButton:hover {
+.Token .Details .Header button:hover {
   border-color: var(--secondary-account-color);
   color: #aaaaaa;
 }
 
 .Token .Details .Description {
   height: 100px;
-  margin: 10px 0;
+  margin-bottom: 10px;
+  overflow-y: auto;
+}
+
+.Token .Details .Description::-webkit-scrollbar {
+  width: 5px;
+}
+
+.Token .Details .Description::-webkit-scrollbar-track {
+  background-color: #111111;
+  border-radius: 100px;
+}
+
+.Token .Details .Description::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 100px;
+  background-color: #aaaaaa;
 }
 
 .Token .Details .Description p {
-  height: 90px;
+  margin: 0;
+  /* height: 70px;
   text-overflow: ellipsis;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 
-.Token .Details .Tabs {}
+.Token .Details .Tabs {
+  /* border-top: 1px dashed; */
+  padding-top: 15px;
+}
 
-.Token .Details .Tabs .TabLinks {}
+.Token .Details .Tabs .TabLinks {
+  border-bottom: 1px dotted;
+}
 
 .Token .Details .Tabs .TabLinks>a {
   border: 1px solid var(--primary-account-color);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  border-bottom: none;
   padding: 0 10px;
-  margin: 5px 0;
+  margin: 5px 1px;
 }
 
 .Token .Details .Tabs .TabLinks>a:hover,
@@ -172,7 +196,7 @@
 }
 
 .Token .Details .Tabs .TabContents {
-  border: 1px solid var(--primary-account-color);
+  /* border: 1px solid var(--primary-account-color); */
   width: 630px;
   position: relative;
 }
@@ -247,5 +271,50 @@
 }
 
 .Token .Details .Events {
-  margin: 20px 0;
+  border-top: 1px dotted;
+  /* margin: 20px 0; */
+}
+
+.Token .Details .Events .Event {
+  border-left: 1px dotted white;
+  padding: 5px 20px 15px 25px;
+  margin-left: 20px;
+}
+
+.Event:before {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: 28px;
+  left: -36px;
+  background-color: whitesmoke;
+  background-position: center;
+  background-size: contain;
+  border-radius: 25%;
+  width: 22px;
+  height: 22px;
+}
+
+.Event.Minted:before {
+  background-image: url('../../../../assets/icons/tokens/mint.svg');
+}
+
+.Event.Transfered:before {
+  background-image: url('../../../../assets/icons/tokens/transfer.svg');
+}
+
+.Token .Details .Events .Event .Title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.Token .Details .Events .Event .Title h3 {
+  margin: 0;
+}
+
+.Token .Details .Events .Event .Description {
+  margin: 0;
+  height: auto;
 }

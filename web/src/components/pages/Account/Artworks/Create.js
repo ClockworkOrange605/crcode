@@ -6,7 +6,6 @@ import Loader from '../../../App/Loader/Loader'
 import './styles/Create.css'
 
 const CreatePage = () => {
-  console.log(process.env)
   const navigate = useNavigate()
 
   const [templates, setTemplates] = useState()

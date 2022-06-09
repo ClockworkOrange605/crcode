@@ -1,7 +1,10 @@
 import { Fragment, useState, useEffect } from "react"
 import { useParams, useLocation } from 'react-router'
+import { Link } from "react-router-dom"
 
-import { request } from "../../../utils/api"
+import { useMetaMask } from "../../App/Auth/MetaMask"
+import { useAuth } from "../../App/Auth/Auth"
+
 import { get as getToken } from '../../../api/tokens'
 
 import Loader from '../../App/Loader/Loader'
@@ -13,19 +16,13 @@ const Token = () => {
   const location = useLocation()
 
   const [token, setToken] = useState()
-  const [metadata, setMetadata] = useState()
 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const load = async () => {
       const token = await getToken(id)
-      const metadata = await request(
-        token.uri.replace('ipfs://', 'https://ipfs.io/ipfs/'))
-
       setToken(token)
-      setMetadata(metadata)
-
       setLoading(false)
     }
 
@@ -56,13 +53,13 @@ const Token = () => {
         <div className="Token">
           <div className="Info">
             <picture>
-              <img alt={metadata.name}
-                src={metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+              <img alt={token.metadata.name}
+                src={token.metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
             </picture>
 
             <div className="Links">
               <a target="_blank" rel="noreferrer"
-                href={`https://polygonscan.com/token/0xd50d167dd35d256e19e2fb76d6b9bf9f4c571a3e?a=${id}`}
+                href={`https://polygonscan.com/token/${token.contract}?a=${id}`}
               >
                 <i className="icon polygonscan" />
               </a>
@@ -72,13 +69,13 @@ const Token = () => {
                 <i className="icon ipfs" />
               </a>
               <a target="_blank" rel="noreferrer"
-                href={`https://opensea.io/assets/matic/0xd50d167dd35d256e19e2fb76d6b9bf9f4c571a3e/${id}`}
+                href={`https://opensea.io/assets/matic/${token.contract}/${id}`}
               >
                 <i className="icon opensea" />
               </a>
 
               <a target="_blank" rel="noreferrer"
-                href={`https://rarible.com/token/polygon/0xd50d167dd35d256e19e2fb76d6b9bf9f4c571a3e:${id}?tab=details`}
+                href={`https://rarible.com/token/polygon/${token.contract}:${id}?tab=details`}
               >
                 <i className="icon rarible" />
               </a>
@@ -86,52 +83,54 @@ const Token = () => {
 
             <div className="Addresses">
               <div className="split">
-                <div>Created by</div>
-                <a href="#">0x
-                  <span style={{ color: `#${token.owner.slice(2, 8)}` }}>
-                    {token.owner.slice(2, 8)}
-                  </span>
-                  &nbsp;. . .&nbsp;
-                  <span style={{ color: `#${token.owner.slice(-6)}` }}>
-                    {token.owner.slice(-6)}
-                  </span>
+                <div>Owned by</div>
+                <a href="#">
+                  <Address address={token.owner} />
                 </a>
               </div>
 
               <div className="split">
-                <div>Owned by</div>
+                <div>Created by</div>
                 <a href="#">
-                  0x
-                  <span style={{ color: `#${token.owner.slice(2, 8)}` }}>
-                    {token.owner.slice(2, 8)}
-                  </span>
-                  &nbsp;. . .&nbsp;
-                  <span style={{ color: `#${token.owner.slice(-6)}` }}>
-                    {token.owner.slice(-6)}
-                  </span>
+                  <Address address={token.creator} />
                 </a>
               </div>
             </div>
 
             <div className="Attributes">
-              {metadata.attributes.map(item =>
-                <a href="#" className="Attribute" key={item.trait_type} title={item.trait_type}>
-                  <div className="trait">{item.trait_type.replace('_', ' ')}</div>
-                  <div className="value">{item.value.replace('_', ' ')}</div>
-                </a>
+              {token.metadata.attributes.map(item =>
+                <Link to={`/collection?${item.trait_type}=${item.value}`}
+                  className="Attribute" key={item.trait_type} title={item.trait_type}>
+                  <div className="trait">{item.trait_type}</div>
+                  <div className="value">{item.value}</div>
+                </Link>
               )}
             </div>
           </div>
 
           <div className="Details">
             <div className="Header">
-              <h1>#{token.id} {metadata.name}</h1>
-              <button className="BidButton">make offer</button>
+              <h1>#{token.id} {token.metadata.name}</h1>
+              <div className="Actions">
+                <button className="BidButton">make offer</button>
+              </div>
+              {/* <AuthorizedBlock permitted={token.owner}
+                message={(
+                  <div className="Actions">
+                    <button className="BidButton">make offer</button>
+                    <button className="BidButton">make a bid</button>
+                  </div>
+                )}
+              >
+                <div className="Actions">
+                  <button className="BidButton">accept offer</button>
+                  <button className="BidButton">start auction</button>
+                </div>
+              </AuthorizedBlock> */}
             </div>
 
-
             <div className="Description">
-              <p>{metadata.description}</p>
+              <p>{token.metadata.description}</p>
             </div>
 
             <div className="Tabs">
@@ -143,51 +142,160 @@ const Token = () => {
               <div className="TabContents">
                 <div id="Preview" className="selected">
                   <video width="600" muted autoPlay loop controls controlsList="nodownload"
-                    src={metadata.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+                    src={token.metadata.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
                 </div>
 
                 <div id="Artwork">
-                  <div className="Actions">
-                    <i className="icon fullscreen" onClick={toggleFullscreen}></i>
-                  </div>
-                  <iframe width="600" height="335" title={metadata.name}
-                    src={`${'http://localhost:9005'}/preview/${'629efca474e74a13573accba'}/sources/${'index.html'}`} />
+                  <AuthorizedBlock permitted={token.owner}
+                    message={<i>Only token owner have access to artwork</i>}
+                  >
+                    <div className="Actions">
+                      <i className="icon fullscreen" onClick={toggleFullscreen}></i>
+                    </div>
+                    <iframe width="600" height="335" title={token.metadata.name}
+                      src={`${'http://localhost:9005'}/preview/${token.artwork_id}/sources/${'index.html'}`} />
+                  </AuthorizedBlock>
                 </div>
 
                 <div id="Sources">
-                  <div className="Actions">
-                    <i className="icon download"></i>
-                  </div>
-                  <i>Sources goes here</i>
+                  <AuthorizedBlock permitted={token.owner}
+                    message={<i>Only token owner have access to source code</i>}
+                  >
+                    <Fragment>
+                      <div className="Actions">
+                        <i className="icon download"></i>
+                      </div>
+                      <i>Sources goes here</i>
+                    </Fragment>
+                  </AuthorizedBlock>
                 </div>
               </div>
             </div>
 
-            <div className="Events">
-              <h2>Token Events</h2>
-              <div>
-                <div>
-                  <div>Minted</div>
-                  <div>Minted by 0x</div>
-                  <div>11/7/2021, 11:00 AM </div>
-                </div>
-                <div>
-                  <div>Transfered</div>
-                  <div>Transfered to 0x</div>
-                  <div>11/7/2021, 11:00 AM </div>
-                </div>
-                <div>
-                  <div>Minted</div>
-                  <div>Minted by 0x</div>
-                  <div>11/7/2021, 11:00 AM </div>
-                </div>
-              </div>
-            </div>
+            <TokenEvents events={token?.events} />
           </div>
         </div>
-      )
-      }
+      )}
     </Fragment >
+  )
+}
+
+const AuthorizedBlock = ({ children, permitted, message }) => {
+  const { address, ethereum, connect } = useMetaMask()
+  const { account, check, auth } = useAuth()
+
+  useEffect(() => { address && check(address) }, [address])
+
+  async function authorize() {
+    const signature = await ethereum.request({
+      method: 'personal_sign', from: address,
+      params: [`${address}@CreativeCoding`, address]
+    })
+    await auth(address, signature)
+  }
+
+  return (
+    <Fragment>
+      {!address && (
+        <Fragment>
+          <i>
+            <button onClick={connect}>Connect with MetaMask </button> to continue . . .
+          </i>
+        </Fragment>
+      )}
+
+      {address && !account && (
+        <Fragment>
+          <i>
+            <button onClick={authorize}>Sign message </button> to continue . . .
+          </i>
+        </Fragment>
+      )}
+
+      {address && account &&
+        account.toLowerCase() !== permitted.toLowerCase() && (
+          <Fragment>
+            {message}
+          </Fragment>
+        )}
+
+      {address && account &&
+        account.toLowerCase() === permitted.toLowerCase() && (
+          <Fragment>
+            {children}
+          </Fragment>
+        )}
+    </Fragment>
+  )
+}
+
+const TokenEvents = ({ events }) => {
+  const [data, setData] = useState()
+
+  //TODO: move to backend
+  useEffect(() => {
+    const eventsClone = events
+
+    eventsClone.forEach(event => {
+      event.type = (event.returnValues.from === "0x0000000000000000000000000000000000000000") ? 'Minted' : 'Transfered'
+
+      eventsClone.push({ ...event, type: 'Transfered' })
+      console.log(eventsClone)
+    })
+    setData(eventsClone)
+  }, [events])
+
+  return (
+    <div className="Events">
+      {/* <h2>Token Events</h2> */}
+      {data && data.map(event =>
+        <div className={`Event ${event.type}`} key={event.transactionHash}>
+          <div className="Title">
+            <h3>{event.type}</h3>
+            <div>
+              <a target="_blank" rel="noreferrer"
+                href={`https://polygonscan.com/tx/${event.transactionHash}`}>
+                <div>at {(new Date(event.block.timestamp * 1000)).toLocaleString()}</div>
+              </a>
+            </div>
+          </div>
+          <div className="Description">
+            {event.type === 'Minted' && (
+              <Fragment>
+                by&nbsp;
+                <a href="#"><Address address={event.returnValues.to} /></a>
+              </Fragment>
+            )}
+
+            {event.type === 'Transfered' && (
+              <Fragment>
+                from&nbsp;
+                <a href="#"><Address address={event.returnValues.from} /></a>
+                &nbsp;to&nbsp;
+                <a href="#"><Address address={event.returnValues.to} /></a>
+              </Fragment>
+            )}
+          </div>
+
+
+        </div>
+      )}
+    </div>
+  )
+}
+
+const Address = ({ address }) => {
+  return (
+    <Fragment>
+      0x
+      <span style={{ color: `#${address.slice(2, 8)}` }}>
+        {address.slice(2, 8)}
+      </span>
+      &nbsp;. . .&nbsp;
+      <span style={{ color: `#${address.slice(-6)}` }}>
+        {address.slice(-6)}
+      </span>
+    </Fragment>
   )
 }
 

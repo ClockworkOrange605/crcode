@@ -24,10 +24,6 @@ function FileList({ root, data, depth, change, open }) {
 
   const openItem = (event, item) => {
     if (!item.dir) {
-      const url = `/preview/${id}/sources${item.path}/${item.name}`
-
-      console.log(url, item)
-
       open(`${item.path}/${item.name}`)
       toggleMenu()
     }

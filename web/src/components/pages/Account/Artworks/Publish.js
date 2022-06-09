@@ -53,13 +53,15 @@ function Publish() {
     const { tx } = await getMintTx(id)
     const txHash = await ethereum.request({ method: 'eth_sendTransaction', params: [tx] })
 
-    const { tx: transaction, token } = await setMintTxHash(id, txHash)
-    transaction.status && navigate(`/collection/${token.id}`)
+    setLoading("Processing Transaction")
+
+    const { transaction, token } = await setMintTxHash(id, txHash)
+    transaction?.status && navigate(`/collection/${token.id}`)
   }
 
   return (
     <Fragment>
-      {loading && <Loader />}
+      {loading && <Loader message={loading} />}
 
       {!loading && (
         <div className="Publisher">

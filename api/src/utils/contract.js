@@ -14,19 +14,28 @@ const getMintTx = async (address, metadata) => {
 }
 
 const getMintTxData = async (hash) => {
-  const tx = await web3.eth.getTransactionReceipt(hash)
+  const transaction = await web3.eth.getTransactionReceipt(hash)
 
-  if (tx?.status) {
-    const id = web3.utils.hexToNumber(tx.logs[0].topics[3])
+  if (transaction?.status) {
+    const id = web3.utils.hexToNumber(transaction.logs[0].topics[3])
+    const events = await contract.getPastEvents("allEvents", { filter: { tokenId: id } })
+
+    events.forEach(async (event) => {
+      event.block = await web3.eth.getBlock(event.blockHash)
+      event.transaction = await web3.eth.getTransactionReceipt(event.transactionHash)
+    })
+
     const token = {
-      id,
+      id, events,
+      contract: transaction.to,
+      creator: transaction.from,
       owner: await contract.methods.ownerOf(id).call(),
-      uri: await contract.methods.tokenURI(id).call()
+      uri: await contract.methods.tokenURI(id).call(),
     }
-    return { tx, token }
+    return { transaction, token }
   }
 
-  return { tx, token: {} }
+  return { transaction, token: {} }
 }
 
 export { getMintTx, getMintTxData }

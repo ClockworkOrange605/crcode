@@ -3,6 +3,9 @@ import { findById as findArtwork, updateById as updateArtwork }
 import { create as createToken } from '../models/Token.js'
 import { getMintTx, getMintTxData } from '../utils/contract.js'
 
+//TODO: refactor
+import fetch from 'node-fetch'
+
 const mintTransaction = async (req, res) => {
   const { account } = res.locals
   const { id } = req.params
@@ -21,12 +24,17 @@ const mintTransactionCheck = async (req, res) => {
   const { id, hash } = req.params
 
   try {
-    const { tx, token } = await getMintTxData(hash)
+    const { transaction, token } = await getMintTxData(hash)
 
-    await createToken({ ...token, transaction: tx })
-    await updateArtwork(id, { status: 'minted', token_id: token.id })
+    //TODO: refactor && cache media
+    const metadataRequest = await fetch(
+      token.uri.replace('ipfs://', 'https://ipfs.io/ipfs/'))
+    const metadata = await metadataRequest.json()
 
-    res.send({ tx, token })
+    await createToken({ artwork_id: id, ...token, metadata })
+    await updateArtwork(id, { token_id: token.id, status: 'minted' })
+
+    res.send({ transaction, token })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }

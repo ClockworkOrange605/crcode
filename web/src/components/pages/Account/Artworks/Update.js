@@ -59,17 +59,22 @@ function Update() {
       description: form.get('description'),
       image: form.get('image'),
       animation: form.get('animation'),
+      //TODO: add background color selector?
+      // background_color:
+      //TODO: add external url
+      // external_url:
+      //TODO: brainstorm attributes
       attributes: [
         {
-          trait_type: "library",
+          trait_type: "Library",
           value: artwork?.template
         },
         {
-          trait_type: "library_version",
+          trait_type: "Version",
           value: artwork?.version
         },
         {
-          trait_type: "sources_size",
+          trait_type: "Size",
           value: size
         },
       ]
@@ -119,8 +124,8 @@ function Update() {
               <label>
                 <span>Attributes</span>
                 <p>Library: {artwork?.template}</p>
-                <p>Library Version: {artwork?.version}</p>
-                <p>Sources Size: {size}</p>
+                <p>Version: {artwork?.version}</p>
+                <p>Size: {size}</p>
               </label>
             </div>
 

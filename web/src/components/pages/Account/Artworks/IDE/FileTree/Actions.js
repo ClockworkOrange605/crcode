@@ -176,7 +176,7 @@ const Input = ({ value, submit, cancel }) => {
   useEffect(() => {
     inputRef.current.addEventListener('focusout', cancel)
     inputRef.current.select()
-  }, [])
+  }, [cancel])
 
   return (
     <form ref={formRef} onSubmit={(e) => { submit(e, v) }}>

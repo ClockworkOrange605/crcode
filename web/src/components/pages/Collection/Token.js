@@ -95,16 +95,16 @@ const Token = () => {
             <div className="Addresses">
               <div className="split">
                 <div>Owned by</div>
-                <a href="#">
+                <Link to={`/account/${token.owner}`}>
                   <Address address={token.owner} />
-                </a>
+                </Link>
               </div>
 
               <div className="split">
                 <div>Created by</div>
-                <a href="#">
+                <Link to={`/account/${token.creator}`}>
                   <Address address={token.creator} />
-                </a>
+                </Link>
               </div>
             </div>
 
@@ -197,7 +197,7 @@ const AuthorizedBlock = ({ children, permitted, message }) => {
   const { address, ethereum, connect } = useMetaMask()
   const { account, check, auth } = useAuth()
 
-  useEffect(() => { address && check(address) }, [address])
+  useEffect(() => { address && check(address) }, [address, check])
 
   async function authorize() {
     const signature = await ethereum.request({
@@ -273,16 +273,22 @@ const TokenEvents = ({ events }) => {
             {event.type === 'Minted' && (
               <Fragment>
                 by&nbsp;
-                <a href="#"><Address address={event.returnValues.to} /></a>
+                <Link to={`/account/${event.returnValues.to}`} >
+                  <Address address={event.returnValues.to} />
+                </Link>
               </Fragment>
             )}
 
             {event.type === 'Transfered' && (
               <Fragment>
                 from&nbsp;
-                <a href="#"><Address address={event.returnValues.from} /></a>
+                <Link to={`/account/${event.returnValues.from}`} >
+                  <Address address={event.returnValues.from} />
+                </Link>
                 &nbsp;to&nbsp;
-                <a href="#"><Address address={event.returnValues.to} /></a>
+                <Link to={`/account/${event.returnValues.to}`} >
+                  <Address address={event.returnValues.to} />
+                </Link>
               </Fragment>
             )}
           </div>

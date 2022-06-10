@@ -36,6 +36,10 @@ const Router = () => {
         path="/account"
         element={<RequireAuth>Under the Development</RequireAuth>}
       />
+      <Route
+        path="/account/:address"
+        element={<RequireAuth>Under the Development</RequireAuth>}
+      />
 
       <Route
         path="/account/artworks"

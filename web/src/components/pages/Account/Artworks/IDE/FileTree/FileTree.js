@@ -1,5 +1,4 @@
 import { Fragment, useRef } from 'react'
-import { useParams } from 'react-router-dom'
 
 import ActionsMenu from './Actions'
 
@@ -14,7 +13,6 @@ function FileTree({ data, change, open }) {
 }
 
 function FileList({ root, data, depth, change, open }) {
-  const { id } = useParams()
 
   //TODO: redesign with :hover
   const toggleMenu = () => {

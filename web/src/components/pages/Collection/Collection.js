@@ -48,13 +48,15 @@ const Collection = () => {
           current.delete(event.target.name)
         break
       case 'select-one':
-        event.target.value != 0 ?
+        event.target.value !== '0' ?
           current.set(event.target.name, event.target.value) :
           current.delete(event.target.name)
         break
       // case 'text':
       //   console.log(event.target.name, event.target.value)
       //   break
+      default:
+        break
     }
 
     setSearchParams(current)

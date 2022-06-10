@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
-import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
-import { list as getTokens } from '../../../api/tokens'
+import { list as getTokens, filter } from '../../../api/tokens'
 
 import Loader from '../../App/Loader/Loader'
 
@@ -21,6 +21,22 @@ const Collection = () => {
 
     load()
   }, [])
+
+  useEffect(() => {
+    const reload = async () => {
+      const filterQuery = {}
+      if (searchParams.get('library'))
+        filterQuery["metadata.attributes"] = {
+          "$elemMatch": { "trait_type": "Library", "value": searchParams.get('library') }
+        }
+
+      setTokens(await filter({ filter: filterQuery }))
+    }
+
+    reload()
+  }, [searchParams])
+
+
 
   const ChangeFilter = (event) => {
     const current = searchParams
@@ -58,25 +74,23 @@ const Collection = () => {
                   <label htmlFor="on_sale">On Sale</label>
                   <input name="on_sale" id="on_sale" type="checkbox"
                     defaultChecked={searchParams.get('on_sale')}
-                    onChange={ChangeFilter}
-                  />
+                    onChange={ChangeFilter} disabled />
                 </div>
                 <div className="Item">
                   <label htmlFor="on_sale">On Auction</label>
                   <input name="on_auction" id="on_auction" type="checkbox"
                     defaultChecked={searchParams.get('on_auction')}
-                    onChange={ChangeFilter} />
+                    onChange={ChangeFilter} disabled />
                 </div>
                 <div className="Item">
                   <label htmlFor="on_sale">Has Offers</label>
                   <input name="has_offers" id="has_offers" type="checkbox"
                     defaultChecked={searchParams.get('has_offers')}
-                    onChange={ChangeFilter}
-                  />
+                    onChange={ChangeFilter} disabled />
                 </div>
               </div>
 
-              <div className="Group">
+              {/* <div className="Group">
                 <h2>Holders</h2>
                 <div className="Item">
                   <label htmlFor="creator">Creator</label>
@@ -90,7 +104,7 @@ const Collection = () => {
                     onChange={ChangeFilter}
                   />
                 </div>
-              </div>
+              </div> */}
 
               <div className="Group">
                 <h2>Attributes</h2>
@@ -101,7 +115,7 @@ const Collection = () => {
                     onChange={ChangeFilter}
                   >
                     <option value={0}>any</option>
-                    <option value={'none'}>none</option>
+                    <option value={'blank'}>blank</option>
                     <option value={'p5'}>p5.js</option>
                   </select>
                 </div>

@@ -152,7 +152,9 @@ const Token = () => {
               </div>
               <div className="TabContents">
                 <div id="Preview" className="selected">
-                  <video width="600" muted autoPlay loop controls controlsList="nodownload"
+                  <video width="600" muted controls controlsList="nodownload"
+                    autoPlay
+                    // loop
                     src={token.metadata.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
                 </div>
 

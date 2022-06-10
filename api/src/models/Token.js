@@ -11,8 +11,8 @@ const updateOne = async (filter, data) =>
 const updateMany = async (filter, data) =>
   dbCollection.updateMany(filter, { $set: { ...data } })
 
-const find = async (filter) =>
-  dbCollection.find(filter).toArray()
+const find = async (filter, sort, limit = 0) =>
+  dbCollection.find(filter).sort(sort).limit(limit).toArray()
 
 const findById = async (id, options = {}) =>
   dbCollection.findOne({ id: parseInt(id) }, options)

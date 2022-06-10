@@ -1,9 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-// TODO: change method
-import { list as getLatest } from '../../api/tokens'
-
+import { filter } from '../../api/tokens'
 import Loader from '../App/Loader/Loader'
 
 import './Home.css'
@@ -14,9 +11,8 @@ function Home() {
 
   useEffect(() => {
     const load = async () => {
-      const tokens = await getLatest()
+      const tokens = await filter({ filter: {}, sort: { id: -1 }, limit: 3 })
       setTokens(tokens)
-
       setLoading(false)
     }
 
@@ -46,15 +42,15 @@ function Home() {
             </div>
           </div>
 
-          <div className="Block">
+          {/* <div className="Block">
             <h2><Link to="/collection?on_sale=true">On Sale</Link></h2>
             <div className="Tokens"></div>
-          </div>
+          </div> */}
 
-          <div className="Block">
+          {/* <div className="Block">
             <h2><Link to="/collection?on_auction=true">On Auction</Link></h2>
             <div className="Tokens"></div>
-          </div>
+          </div> */}
         </div>
       )}
     </Fragment>

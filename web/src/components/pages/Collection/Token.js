@@ -166,7 +166,7 @@ const Token = () => {
                       <i className="icon fullscreen" onClick={toggleFullscreen}></i>
                     </div>
                     <iframe width="600" height="335" title={token.metadata.name}
-                      src={`${'http://localhost:9005'}/preview/${token.artwork_id}/sources/${'index.html'}`} />
+                      src={`/preview/${token.artwork_id}/sources/${'index.html'}`} />
                   </AuthorizedBlock>
                 </div>
 

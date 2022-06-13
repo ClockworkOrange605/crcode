@@ -12,18 +12,18 @@ const api = express()
 api.use(express.json())
 api.use(express.raw({ limit: "25Mb", type: "*/*" }))
 
-api.use('/auth', AuthRouter)
-api.use('/templates', TemplatesRouter)
-api.use('/artworks', ArtworksRouter)
-api.use('/editor', EditorRouter)
-api.use('/contract', ContractRouter)
-api.use('/collection', CollectionRouer)
+api.get('/api/', (req, res) => { res.send({ timestamp: Date.now() }) })
+
+api.use('/api/auth', AuthRouter)
+api.use('/api/templates', TemplatesRouter)
+api.use('/api/artworks', ArtworksRouter)
+api.use('/api/editor', EditorRouter)
+api.use('/api/contract', ContractRouter)
+api.use('/api/collection', CollectionRouer)
 
 //TODO: add auth middlware (Make sure preview page keep working)
 api.use('/preview', express.static('/storage/artworks'))
 
-api.get('/', (req, res) => { res.send({ timestamp: Date.now() }) })
-
 api.listen(4000, () => {
-  console.log(`Example app listening at http://localhost:${4000}`)
+  console.log(`API listening at http://localhost:${4000}`)
 })

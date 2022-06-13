@@ -5,7 +5,7 @@ function Window({ url, logs }) {
   const iframeRef = useRef()
 
   function start() {
-    iframeRef.current.src = `${'http://localhost:9005'}${url}`
+    iframeRef.current.src = url
     logs([])
   }
 

@@ -30,17 +30,22 @@ const recordPage = async (url, path) => {
 
   console.time('frames')
 
-  //TODO: make sure that return after screenshots
-  ffmpeg(`${path}demo.mp4`)
-    .screenshots({
-      folder: path,
-      filename: 'preview.png',
-      count: 9,
-    })
-    .on('end', function () {
-      console.timeEnd('frames')
-      return true
-    })
+  //TODO: refactor
+  return new Promise((resolve, reject) => {
+    ffmpeg(`${path}demo.mp4`)
+      .screenshots({
+        folder: path,
+        filename: 'preview.png',
+        count: 9,
+      })
+      .on('end', function () {
+        console.timeEnd('frames')
+        resolve()
+      })
+      .on('error', function (err) {
+        reject(err)
+      })
+  })
 }
 
 export { recordPage }

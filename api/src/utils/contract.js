@@ -14,7 +14,14 @@ const getMintTx = async (address, metadata) => {
 }
 
 const getMintTxData = async (hash) => {
+  //TODO: check getPendingTransactions method
   const transaction = await web3.eth.getTransactionReceipt(hash)
+
+  // TODO: refactor
+  if (transaction === null) {
+    console.log(transaction)
+    return await getMintTxData(hash)
+  }
 
   if (transaction?.status) {
     const id = web3.utils.hexToNumber(transaction.logs[0].topics[3])

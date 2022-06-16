@@ -38,6 +38,9 @@ const Token = () => {
         document.querySelector(location.hash).classList.add('selected')
         document.querySelector(`.TabLinks > a[href="${location.hash}"]`)
           .classList.add('selected')
+
+        if (location.hash === '#Artwork' && document.querySelector('#Artwork iframe'))
+          document.querySelector('#Artwork iframe').contentWindow.location.reload()
       }
     }
   }, [location, loading])
@@ -53,8 +56,11 @@ const Token = () => {
 
   }
 
-  const toggleFullscreen = () =>
+  const toggleFullscreen = () => {
     document.querySelector('#Artwork').classList.toggle('fullscreen')
+    document.querySelector('#Artwork iframe').contentWindow.location.reload()
+  }
+
 
   return (
     <Fragment>
@@ -70,7 +76,8 @@ const Token = () => {
 
             <div className="Links">
               <a target="_blank" rel="noreferrer"
-                href={`https://polygonscan.com/token/${token.contract}?a=${id}`}
+                href={`https://mumbai.polygonscan.com/token/${token.contract}?a=${id}`}
+              // href={`https://polygonscan.com/token/${token.contract}?a=${id}`}
               >
                 <i className="icon polygonscan" />
               </a>
@@ -80,13 +87,15 @@ const Token = () => {
                 <i className="icon ipfs" />
               </a>
               <a target="_blank" rel="noreferrer"
-                href={`https://opensea.io/assets/matic/${token.contract}/${id}`}
+                href={`https://testnets.opensea.io/assets/mumbai/${token.contract}/${id}`}
+              // href={`https://opensea.io/assets/matic/${token.contract}/${id}`}
               >
                 <i className="icon opensea" />
               </a>
 
               <a target="_blank" rel="noreferrer"
-                href={`https://rarible.com/token/polygon/${token.contract}:${id}?tab=details`}
+                href={`https://rinkeby.rarible.com/token/mumbai/${token.contract}:${id}?tab=details`}
+              // href={`https://rarible.com/token/polygon/${token.contract}:${id}?tab=details`}
               >
                 <i className="icon rarible" />
               </a>
@@ -264,7 +273,9 @@ const TokenEvents = ({ events }) => {
             <h3>{event.type}</h3>
             <div>
               <a target="_blank" rel="noreferrer"
-                href={`https://polygonscan.com/tx/${event.transactionHash}`}>
+                href={`https://mumbai.polygonscan.com/tx/${event.transactionHash}`}
+              // href={`https://polygonscan.com/tx/${event.transactionHash}`}
+              >
                 <div>at {(new Date(event.block.timestamp * 1000)).toLocaleString()}</div>
               </a>
             </div>

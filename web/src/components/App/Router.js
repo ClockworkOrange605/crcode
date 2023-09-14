@@ -14,6 +14,7 @@ import Templates from "../pages/Account/Artworks/Create"
 import IDE from "../pages/Account/Artworks/IDE/IDE"
 import Metadata from "../pages/Account/Artworks/Update"
 import Mint from '../pages/Account/Artworks/Publish'
+import Upload from "../pages/Account/Artworks/Upload"
 
 const Router = () => {
   return (
@@ -52,6 +53,10 @@ const Router = () => {
       <Route
         path="/account/artworks/:id/editor"
         element={<RequireAuth><IDE /></RequireAuth>}
+      />
+      <Route
+        path="/account/artworks/:id/filecoin"
+        element={<RequireAuth><Upload /></RequireAuth>}
       />
       <Route
         path="/account/artworks/:id/metadata"

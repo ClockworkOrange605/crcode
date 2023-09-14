@@ -40,10 +40,6 @@
   overflow-x: auto;
 }
 
-.Uploader .Files code span {
-  color: #ffffff;
-}
-
 .Uploader .Files code::-webkit-scrollbar {
   height: 10px;
 }

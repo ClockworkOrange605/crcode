@@ -45,13 +45,16 @@ function Upload() {
     const filepath = `/preview/${id}/sources/${file}`
 
     const response = await fetch(filepath)
+
+    //TODO: write RegExp
+    const language = response.headers.get("Content-Type").split(';')[0].split('/')[1].trim()
     const content = await response.text()
 
-    //ISSUE: https://github.com/microsoft/monaco-editor/issues/3105
     const code = await monaco.editor.colorize(
-      content, 'js', { tabSize: 2 })
+      content, language, {theme: 'vs-dark', tabSize: 2 })
 
     setCode(code)
+
     // setOpenedFile(file)
   }
 

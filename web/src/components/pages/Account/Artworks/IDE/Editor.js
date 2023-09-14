@@ -15,6 +15,7 @@ function Editor({ id, file }) {
         tabSize: 2,
         scrollBeyondLastLine: false,
         rulers: [60, 90, 120],
+        language: 'typescript'
       })
 
       setEditor(editorInstance)

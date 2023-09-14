@@ -69,10 +69,6 @@
   overflow-x: auto;
 }
 
-.Publisher .Metadata code span {
-  color: #ffffff;
-}
-
 .Publisher .Metadata code::-webkit-scrollbar {
   height: 10px;
 }

@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "ms-azuretools.vscode-docker",
-        "msjsdiag.vscode-react-native",
         "mongodb.mongodb-vscode",
         "trufflesuite-csi.truffle-vscode"
     ]

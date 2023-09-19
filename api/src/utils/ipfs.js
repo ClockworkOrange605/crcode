@@ -1,6 +1,12 @@
 import config from '../../config/main.js'
 import fetch, { fileFromSync } from 'node-fetch'
 
+import fs from 'fs'
+import { Writable } from 'stream'
+
+import { filesFromPaths } from 'files-from-path'
+import { CAREncoderStream, createDirectoryEncoderStream } from 'ipfs-car'
+
 const uploadFile = async (filepath) => {
   const file = fileFromSync(filepath)
 
@@ -32,4 +38,16 @@ const uploadJSON = async (json) => {
   return `ipfs://${data.value.cid}`
 }
 
-export { uploadFile, uploadJSON }
+// npx ipfs-car pack /storage/artworks/6508a4d0bb914380e76c6013/sources/ --output=/storage/artworks/6508a4d0bb914380e76c6013/6508a4d0bb914380e76c6013.car
+const packCar = async (path, car) => {
+  const files = await filesFromPaths([path])
+
+  await createDirectoryEncoderStream(files)
+    .pipeThrough(new CAREncoderStream(car))
+    .pipeTo(Writable.toWeb(fs.createWriteStream(car)))
+}
+
+// npx ipfs-car unpack /storage/artworks/6508a4d0bb914380e76c6013/QmePjsjdBejmNHB6UxP5nFosww3QqjcjP4qtHGxtv9ifZz --output /storage/artworks/6508a4d0bb914380e76c6013/car/
+const unpackCar = () => {}
+
+export { uploadFile, uploadJSON, packCar, unpackCar }

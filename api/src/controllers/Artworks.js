@@ -4,8 +4,9 @@ import {
   updateById as updateArtwork
 } from '../models/Artwork.js'
 
-import { uploadFile, uploadJSON } from '../utils/ipfs.js'
 import { recordPage } from '../utils/chromium.js'
+import { packCar, uploadFile, uploadJSON } from '../utils/ipfs.js'
+import { getMessage, setAccessConditions, uploadEncriptedFolder } from '../utils/lighthouse.js'
 
 const list = async (req, res) => {
   const { account } = res.locals
@@ -79,4 +80,51 @@ const updateMetadata = async (req, res) => {
   }
 }
 
+const getSignMessage = async (req, res) => {
+  const { account } = res.locals
+
+  try {
+    const message = await getMessage(account)
+    res.send({ message })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+const uploadSources = async (req, res) => {
+  const { account } = res.locals
+  const { id } = req.params
+  const { signature } = req.body
+
+  const path = `/storage/artworks/${id}/sources/`
+  const car = `/storage/artworks/${id}/${id}.car`
+
+  try {
+    await packCar(path, car)
+    const cid = await uploadEncriptedFolder(car, account, signature)
+
+    await updateArtwork(id, { car: cid })
+
+    res.send({ id, cid, status: "uploaded" })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+const setConditions = async (req, res) => {
+  const { account } = res.locals
+  const { id } = req.params
+  const { signature, cid } = req.body
+
+  try {
+    const response = await setAccessConditions(cid, account, signature)
+
+    res.send({ id, status: "In development", response })
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({ error: err })
+  }
+}
+
 export { list, get, generateMedia, updateMetadata }
+export{ getSignMessage, uploadSources, setConditions }

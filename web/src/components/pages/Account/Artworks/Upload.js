@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Loader from "../../../App/Loader/Loader"
-import { get as getArtwork } from '../../../../api/artworks'
+import { get as getArtwork, getMessage, setAccessConditions, uploadSources } from '../../../../api/artworks'
 import { get as getTemplate } from '../../../../api/templates'
 import { getFiles } from "../../../../api/editor"
 
 import './styles/Upload.css'
 
 import * as monaco from 'monaco-editor'
+import { useMetaMask } from "../../../App/Auth/MetaMask"
 
 function Upload() {
+  const { address, ethereum } = useMetaMask()
   const navigate = useNavigate()
+
   const { id } = useParams()
 
   const [loadingMessage, setLoading] = useState(' ')
@@ -59,7 +62,25 @@ function Upload() {
   }
 
   const upload = async () => {
-    setLoading('Uploading Sources to Filecoin')
+    setLoading('Uploading Sources to Filecoin. Several signaures will be required')
+
+    const { message } = await getMessage(id);
+
+    const signature = await ethereum.request({
+      method: 'personal_sign',
+      params: [message, address]
+    })
+
+    const { cid } = await uploadSources(id, {signature})
+
+    const { message: message2 } = await getMessage(id);
+
+    const signature2 = await ethereum.request({
+      method: 'personal_sign',
+      params: [message2, address]
+    })
+
+    await setAccessConditions(id, { cid, signature: signature2 })
 
     navigate(`/account/artworks/${id}/publish`)
   }

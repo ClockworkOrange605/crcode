@@ -5,8 +5,10 @@ import {
 } from '../models/Artwork.js'
 
 import { recordPage } from '../utils/chromium.js'
-import { packCar, uploadFile, uploadJSON } from '../utils/ipfs.js'
-import { getMessage, setAccessConditions, uploadEncriptedFolder } from '../utils/lighthouse.js'
+import { packCar, unpackCar, uploadFile, uploadJSON } from '../utils/ipfs.js'
+import { decryptSources, getEncriptionKey, getMessage, setAccessConditions, uploadEncriptedFolder } from '../utils/lighthouse.js'
+
+import {appendFileSync, writeFileSync} from 'fs'
 
 const list = async (req, res) => {
   const { account } = res.locals
@@ -91,6 +93,21 @@ const getSignMessage = async (req, res) => {
   }
 }
 
+const getDecryptionKey = async (req, res) => {
+  const { account } = res.locals
+  const { id } = req.params
+  const { signature, cid } = req.query
+
+  try {
+    const key = await getEncriptionKey(cid, account, signature)
+
+    res.send({ id, key })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+
+}
+
 const uploadSources = async (req, res) => {
   const { account } = res.locals
   const { id } = req.params
@@ -101,11 +118,31 @@ const uploadSources = async (req, res) => {
 
   try {
     await packCar(path, car)
+
     const cid = await uploadEncriptedFolder(car, account, signature)
 
-    await updateArtwork(id, { car: cid })
+    await updateArtwork(id, { car: cid, status: "encrypted" })
 
-    res.send({ id, cid, status: "uploaded" })
+    res.send({ id, cid, status: "encrypted" })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+const downloadSources = async (req, res) => {
+  const { id } = req.params
+  const { cid, key } = req.query
+
+  const car = `/storage/cache/${key}.car`
+  const path = `/storage/cache/${key}/`
+
+  try {
+    const sources = await decryptSources(cid, key)
+    writeFileSync(car, Buffer.from(sources))
+
+    await unpackCar(car, path)
+
+    res.send({ id, car })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
@@ -117,14 +154,16 @@ const setConditions = async (req, res) => {
   const { signature, cid } = req.body
 
   try {
-    const response = await setAccessConditions(cid, account, signature)
+    // TODO: check success
+    await setAccessConditions(cid, account, signature)
 
-    res.send({ id, status: "In development", response })
+    await updateArtwork(id, { car: cid, status: "protected" })
+
+    res.send({ id, status: "protected" })
   } catch (err) {
-    console.log(err)
     res.status(500).send({ error: err })
   }
 }
 
 export { list, get, generateMedia, updateMetadata }
-export{ getSignMessage, uploadSources, setConditions }
+export{ getSignMessage, getDecryptionKey, uploadSources, downloadSources, setConditions }

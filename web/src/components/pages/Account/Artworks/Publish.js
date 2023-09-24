@@ -35,8 +35,9 @@ function Publish() {
         data.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/'))
       const metadata = await response.json()
 
+      monaco.editor.setTheme('vs-dark')
       const code = await monaco.editor.colorize(
-        JSON.stringify(metadata, null, '\t'), 'typescript', { theme: 'vs-dark', tabSize: 2 })
+        JSON.stringify(metadata, null, '\t'), 'typescript', { tabSize: 2 })
 
       setData(data)
       setMetadata(metadata)

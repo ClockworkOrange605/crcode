@@ -53,8 +53,8 @@ function Upload() {
     const language = response.headers.get("Content-Type").split(';')[0].split('/')[1].trim()
     const content = await response.text()
 
-    const code = await monaco.editor.colorize(
-      content, language, {theme: 'vs-dark', tabSize: 2 })
+    monaco.editor.setTheme('vs-dark')
+    const code = await monaco.editor.colorize(content, language, { tabSize: 2 })
 
     setCode(code)
 

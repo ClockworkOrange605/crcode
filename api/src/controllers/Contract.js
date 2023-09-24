@@ -5,14 +5,17 @@ import { getMintTx, getMintTxData } from '../utils/contract.js'
 
 //TODO: refactor
 import fetch from 'node-fetch'
+import { objectIdtoUint256 } from '../utils/eth.js'
 
 const mintTransaction = async (req, res) => {
   const { account } = res.locals
   const { id } = req.params
 
+  const tokenId = objectIdtoUint256(id)
+
   try {
     const { metadata_hash } = await findArtwork(id)
-    const tx = await getMintTx(account, metadata_hash)
+    const tx = await getMintTx(account, tokenId, metadata_hash)
 
     res.send({ tx })
   } catch (err) {

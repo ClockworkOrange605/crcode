@@ -9,6 +9,7 @@ import {
 import { recordPage } from '../utils/chromium.js'
 import { packCar, unpackCar, uploadFile, uploadJSON } from '../utils/ipfs.js'
 import { downloadFileDecrypted, uploadedFileDealStatus, uploadedFileStatus, getKey, getMessage, setAccessConditions, uploadFileEncripted, registerFilecoinUploadJob, getFilecoinUploadJobStatus } from '../utils/lighthouse.js'
+import { objectIdtoUint256 } from '../utils/eth.js'
 
 
 const list = async (req, res) => {
@@ -151,8 +152,10 @@ const setSourcesAccessConditions = async (req, res) => {
   const { id } = req.params
   const { cid, signature } = req.body
 
+  const tokenId = objectIdtoUint256(id)
+
   try {
-    await setAccessConditions(cid, account, signature)
+    await setAccessConditions(cid, tokenId, account, signature)
     // TODO: change status
     await updateArtwork(id, { car: cid, status: "protected" })
 

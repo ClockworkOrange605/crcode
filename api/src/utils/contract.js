@@ -1,7 +1,7 @@
 import { config, web3, contract } from '../rpc.js'
 
-const getMintTx = async (address, metadata) => {
-  const method = await contract.methods.mint(address, metadata)
+const getMintTx = async (address, tokenId, metadata) => {
+  const method = await contract.methods.mint(address, tokenId, metadata)
 
   return {
     from: address,

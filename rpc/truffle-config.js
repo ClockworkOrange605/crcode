@@ -83,7 +83,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.14",
+      version: "0.8.19",
       settings: {
         optimizer: {
           enabled: false,

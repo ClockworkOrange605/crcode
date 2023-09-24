@@ -31,11 +31,7 @@ const uploadFileEncripted = async (path, address, signature) => {
 const downloadFileDecrypted = (cid, key) =>
   lighthouse.decryptFile(cid, key, 'application/vnd.curl.car')
 
-const setAccessConditions = async (cid, address, signature) => {
-  // TODO: get tokenId before minting
-  // change contract minting logic
-  let tokenId = '613'
-
+const setAccessConditions = async (cid, tokenId, address, signature) => {
   const accessRules = [
     {
       id: 1,

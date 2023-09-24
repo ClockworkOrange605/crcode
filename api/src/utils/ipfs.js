@@ -35,14 +35,13 @@ const uploadJSON = async (json) => {
   return `ipfs://${data.value.cid}`
 }
 
-// npx ipfs-car pack /storage/artworks/6508a4d0bb914380e76c6013/sources/ --output=/storage/artworks/6508a4d0bb914380e76c6013/6508a4d0bb914380e76c6013.car
-const packCar = async (path, car) => {
-  await pack(path, {output: car})
-}
+// npx ipfs-car pack /path --output=file.car
+const packCar = (path, car) =>
+  pack(path, { output: car })
 
-// npx ipfs-car unpack /storage/cache/429a75fc3cebe23c504d7df3fdd64892de0f4b3597e781168d177d16aa6e3959.car --output /storage/cache/429a75fc3cebe23c504d7df3fdd64892de0f4b3597e781168d177d16aa6e3959/
-const unpackCar = async (car, path) => {
-  await unpack(car, {output: path})
-}
+// npx ipfs-car unpack file.car --output /path
+const unpackCar = (car, path) =>
+  unpack(car, { output: path })
 
-export { uploadFile, uploadJSON, packCar, unpackCar }
+export { uploadFile, uploadJSON }
+export { packCar, unpackCar }

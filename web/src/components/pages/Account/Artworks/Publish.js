@@ -69,8 +69,8 @@ function Publish() {
       params: [message, address]
     })
 
-    const { key } = await getDecryptionKey(id, cid, signature)
-    await downloadSources(id, cid, key)
+    const { key } = await getDecryptionKey(id, { cid, signature })
+    await downloadSources(id, { cid, key })
 
     frameRef.current.src = `/cache/${key}`
     setLoaded(true)
@@ -124,7 +124,7 @@ function Publish() {
               >{`https://files.lighthouse.storage/viewFile/${data.car}`}</a>
             </h2>
             <div className='Iframe'>
-              <button className="Message" hidden={loaded}  onClick={() => decrypt(data.car)}>Decrypt sources</button>
+              <button className="Message" hidden={loaded} onClick={() => decrypt(data.car)}>Decrypt sources</button>
               <iframe ref={frameRef} src='about:blank' hidden={!loaded} />
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { writeFileSync } from 'fs'
+
 import {
   find as findArtworks,
   findById as findArtwork,
@@ -6,9 +8,8 @@ import {
 
 import { recordPage } from '../utils/chromium.js'
 import { packCar, unpackCar, uploadFile, uploadJSON } from '../utils/ipfs.js'
-import { decryptSources, getEncriptionKey, getMessage, setAccessConditions, uploadEncriptedFolder } from '../utils/lighthouse.js'
+import { downloadFileDecrypted, uploadedFileDealStatus, uploadedFileStatus, getKey, getMessage, setAccessConditions, uploadFileEncripted, registerFilecoinUploadJob, getFilecoinUploadJobStatus } from '../utils/lighthouse.js'
 
-import {appendFileSync, writeFileSync} from 'fs'
 
 const list = async (req, res) => {
   const { account } = res.locals
@@ -86,8 +87,7 @@ const getSignMessage = async (req, res) => {
   const { account } = res.locals
 
   try {
-    const message = await getMessage(account)
-    res.send({ message })
+    res.send({ message: await getMessage(account) })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
@@ -95,17 +95,13 @@ const getSignMessage = async (req, res) => {
 
 const getDecryptionKey = async (req, res) => {
   const { account } = res.locals
-  const { id } = req.params
-  const { signature, cid } = req.query
+  const { cid, signature } = req.body
 
   try {
-    const key = await getEncriptionKey(cid, account, signature)
-
-    res.send({ id, key })
+    res.send({ key: await getKey(cid, account, signature) })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
-
 }
 
 const uploadSources = async (req, res) => {
@@ -119,51 +115,76 @@ const uploadSources = async (req, res) => {
   try {
     await packCar(path, car)
 
-    const cid = await uploadEncriptedFolder(car, account, signature)
+    const cid = await uploadFileEncripted(car, account, signature)
 
+    // TODO: make sure that job done
+    console.log('filecoin deal register:', await registerFilecoinUploadJob(cid))
+
+    // TODO: change status
     await updateArtwork(id, { car: cid, status: "encrypted" })
 
     res.send({ id, cid, status: "encrypted" })
+  } catch (err) {
+    console.log(err)
+    res.status(500).send({ error: err.message })
+  }
+}
+
+// TODO: check status
+const getUploadingStatus = async (req, res) => {
+  const { cid } = req.body
+
+  try {
+    res.send({
+      status: {
+        file: await uploadedFileStatus(cid),
+        deal: await uploadedFileDealStatus(cid)
+      }
+    })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
 }
 
+const setSourcesAccessConditions = async (req, res) => {
+  const { account } = res.locals
+  const { id } = req.params
+  const { cid, signature } = req.body
+
+  try {
+    await setAccessConditions(cid, account, signature)
+    // TODO: change status
+    await updateArtwork(id, { car: cid, status: "protected" })
+
+    res.send({ id, status: "protected" })
+  } catch (err) {
+    res.status(500).send({ error: err.message })
+  }
+}
+
+
 const downloadSources = async (req, res) => {
   const { id } = req.params
-  const { cid, key } = req.query
+  const { cid, key } = req.body
 
   const car = `/storage/cache/${key}.car`
   const path = `/storage/cache/${key}/`
 
   try {
-    const sources = await decryptSources(cid, key)
+    const sources = await downloadFileDecrypted(cid, key)
     writeFileSync(car, Buffer.from(sources))
 
     await unpackCar(car, path)
 
-    res.send({ id, car })
+    // TODO: check mining status
+    console.log('filecoin deal status:', await getFilecoinUploadJobStatus(cid))
+
+    res.send({ id, cid })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
 }
 
-const setConditions = async (req, res) => {
-  const { account } = res.locals
-  const { id } = req.params
-  const { signature, cid } = req.body
-
-  try {
-    // TODO: check success
-    await setAccessConditions(cid, account, signature)
-
-    await updateArtwork(id, { car: cid, status: "protected" })
-
-    res.send({ id, status: "protected" })
-  } catch (err) {
-    res.status(500).send({ error: err })
-  }
-}
-
 export { list, get, generateMedia, updateMetadata }
-export{ getSignMessage, getDecryptionKey, uploadSources, downloadSources, setConditions }
+export { getSignMessage, getDecryptionKey }
+export { uploadSources, downloadSources, setSourcesAccessConditions }

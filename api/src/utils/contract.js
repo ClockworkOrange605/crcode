@@ -17,7 +17,9 @@ const getMintTxData = async (hash) => {
   const transaction = await web3.eth.getTransactionReceipt(hash)
 
   if (transaction?.status) {
-    const id = web3.utils.hexToNumber(transaction.logs[0].topics[3])
+    const id =
+      web3.utils.toBN(transaction.logs[0].topics[3]).toString()
+
     const events = await contract.getPastEvents("allEvents", { filter: { tokenId: id } })
 
     events.forEach(async (event) => {

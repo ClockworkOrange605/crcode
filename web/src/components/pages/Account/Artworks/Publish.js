@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, Fragment } from 'react'
 import { useParams, useNavigate } from 'react-router'
 
 import { useMetaMask } from '../../../App/Auth/MetaMask'
-import { get as getArtwork } from '../../../../api/artworks'
+import { downloadSources, get as getArtwork, getDecryptionKey, getMessage } from '../../../../api/artworks'
 import { getMintTx, setMintTxHash } from '../../../../api/contract'
 
 import Loader from '../../../App/Loader/Loader'
@@ -12,10 +12,11 @@ import * as monaco from 'monaco-editor'
 import './styles/Publish.css'
 
 function Publish() {
-  const { ethereum } = useMetaMask()
+  const { address, ethereum } = useMetaMask()
   const navigate = useNavigate()
 
   const codeRef = useRef()
+  const frameRef = useRef()
 
   const { id } = useParams()
   const [data, setData] = useState()
@@ -34,9 +35,9 @@ function Publish() {
         data.metadata_hash.replace('ipfs://', 'https://ipfs.io/ipfs/'))
       const metadata = await response.json()
 
-      //ISSUE: https://github.com/microsoft/monaco-editor/issues/3105
+      monaco.editor.setTheme('vs-dark')
       const code = await monaco.editor.colorize(
-        JSON.stringify(metadata, null, '\t'), 'json', { tabSize: 2 })
+        JSON.stringify(metadata, null, '\t'), 'typescript', { tabSize: 2 })
 
       setData(data)
       setMetadata(metadata)
@@ -57,6 +58,23 @@ function Publish() {
 
     const { transaction, token } = await setMintTxHash(id, txHash)
     transaction?.status && navigate(`/collection/${token.id}`)
+  }
+
+  const [loaded, setLoaded] = useState(false)
+
+  async function decrypt(cid) {
+    const { message } = await getMessage(id);
+
+    const signature = await ethereum.request({
+      method: 'personal_sign',
+      params: [message, address]
+    })
+
+    const { key } = await getDecryptionKey(id, { cid, signature })
+    await downloadSources(id, { cid, key })
+
+    frameRef.current.src = `/cache/${key}`
+    setLoaded(true)
   }
 
   return (
@@ -98,6 +116,18 @@ function Publish() {
             </h2>
             <video width="450" muted autoPlay loop controls controlsList="nodownload"
               src={metadata?.animation_url.replace('ipfs://', 'https://ipfs.io/ipfs/')} />
+          </div>
+
+          <div className="Sources">
+            <h2>Sources&nbsp;
+              <a target="_blank" rel="noreferrer"
+                href={`https://files.lighthouse.storage/viewFile/${data.car}`}
+              >{`https://files.lighthouse.storage/viewFile/${data.car}`}</a>
+            </h2>
+            <div className='Iframe'>
+              <button className="Message" hidden={loaded} onClick={() => decrypt(data.car)}>Decrypt sources</button>
+              <iframe ref={frameRef} src='about:blank' hidden={!loaded} />
+            </div>
           </div>
 
           <div className="Actions">

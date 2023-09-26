@@ -1,7 +1,7 @@
 import { config, web3, contract } from '../rpc.js'
 
-const getMintTx = async (address, metadata) => {
-  const method = await contract.methods.mint(address, metadata)
+const getMintTx = async (address, tokenId, metadata) => {
+  const method = await contract.methods.mint(address, tokenId, metadata)
 
   return {
     from: address,
@@ -17,7 +17,9 @@ const getMintTxData = async (hash) => {
   const transaction = await web3.eth.getTransactionReceipt(hash)
 
   if (transaction?.status) {
-    const id = web3.utils.hexToNumber(transaction.logs[0].topics[3])
+    const id =
+      web3.utils.toBN(transaction.logs[0].topics[3]).toString()
+
     const events = await contract.getPastEvents("allEvents", { filter: { tokenId: id } })
 
     events.forEach(async (event) => {

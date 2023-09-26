@@ -84,7 +84,7 @@ function Update() {
 
     await uploadMetadata(id, { metadata })
 
-    navigate(`/account/artworks/${id}/publish`)
+    navigate(`/account/artworks/${id}/filecoin`)
   }
 
   return (

@@ -9,12 +9,14 @@ function Editor({ id, file }) {
   useEffect(() => {
     // temp in dev enviroment
     if (!editor) {
+      // https://github.com/microsoft/monaco-editor/tree/main/samples/browser-esm-vite-react
       const editorInstance = monaco.editor.create(editorRef.current, {
         theme: 'vs-dark',
         minimap: { enabled: false },
         tabSize: 2,
         scrollBeyondLastLine: false,
         rulers: [60, 90, 120],
+        language: 'typescript'
       })
 
       setEditor(editorInstance)

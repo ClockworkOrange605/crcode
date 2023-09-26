@@ -23,6 +23,7 @@ api.use('/api/collection', CollectionRouer)
 
 //TODO: add auth middlware (Make sure preview page keep working)
 api.use('/preview', express.static('/storage/artworks'))
+api.use('/cache', express.static('/storage/cache'))
 
 api.listen(4000, () => {
   console.log(`API listening at http://localhost:${4000}`)

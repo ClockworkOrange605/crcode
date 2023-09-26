@@ -4,11 +4,13 @@ services:
 
   mongo:
     image: mongo:4.4
+    volumes:
+      - ./storage/db/admin:/data/db/
     ports:
       - ${PORT_MONGODB}:27017
 
   api:
-    image: node:16
+    image: node:18
     command: bash -c " apt update && apt install -y chromium ffmpeg && npm install && npm run dev"
     working_dir: /app
     volumes:
@@ -25,6 +27,7 @@ services:
       INFURA_IPFS_ID: ${INFURA_IPFS_ID}
       INFURA_IPFS_SECRET: ${INFURA_IPFS_SECRET}
       NFT_STORAGE_KEY: ${NFT_STORAGE_KEY}
+      LIGHTHOUSE_API_KEY: ${LIGHTHOUSE_API_KEY}
 
   web:
     image: node:16

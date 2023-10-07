@@ -47,6 +47,12 @@ module.exports = {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 9545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
+      // provider: () => new HDWalletProvider(mnemonic, "http://localhost:9545"),
+    },
+    // npx truffle migrate --network=mumbai
+    mumbai: {
+      network_id: "80001",
+      provider: () => new HDWalletProvider(mnemonic, `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_ID}`),
     },
     // Another network with more advanced options...
     // advanced: {

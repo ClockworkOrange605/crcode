@@ -20,7 +20,8 @@ services:
       - ${PORT_API}:4000
     environment:
       MONGO_URI: mongodb://mongo:27017
-      EVM_RPC: http://rpc:9545
+      # EVM_RPC: http://rpc:9545
+      EVM_RPC: https://polygon-mumbai.infura.io/v3/${INFURA_ID}
 
       CONTRACT_ADDRESS: ${CONTRACT_ADDRESS}
 
@@ -41,10 +42,12 @@ services:
       WDS_SOCKET_PORT: ${PORT_WEB}
 
   rpc:
-    image: node:14
+    image: node:20
     command: bash -c "npm install && npx truffle develop"
     working_dir: /app
     volumes:
       - ./rpc:/app
     ports:
       - ${PORT_RPC}:9545
+    environment:
+      - INFURA_ID=${INFURA_ID}
